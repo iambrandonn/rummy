@@ -1,0 +1,22 @@
+{
+  "name": "rummyfox",
+  "version": "0.0.1",
+  "description": "rummyfox ========",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/iambrandonn/rummyfox.git"
+  },
+  "author": "Brandon Nicholls",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iambrandonn/rummyfox/issues"
+  },
+  "homepage": "https://github.com/iambrandonn/rummyfox"
+}
