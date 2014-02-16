@@ -1,3 +1,5 @@
-var deck = require('./shuffle');
+// var deck = require('./shuffle');
 
-console.log(deck.shuffle(['a', 'b', 'c']));
+var canvas = document.getElementById('game');
+var ctx = canvas.getContext('2d');
+
