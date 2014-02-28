@@ -1,0 +1,10 @@
+{
+  "undef": true,
+  "unused": true,
+  "globals": { "MY_GLOBAL": false },
+  "strict": false,
+  "predef": [
+    "module",
+    "require"
+  ]
+}
