@@ -1,57 +1,61 @@
-// Polyfill requestAnimationFrame
-if (!Date.now)
-    Date.now = function() { return new Date().getTime(); };
-(function() {
-    var vendors = ['webkit', 'moz'];
-    for (var i = 0; i < vendors.length && !window.requestAnimationFrame; ++i) {
-        var vp = vendors[i];
-        window.requestAnimationFrame = window[vp+'RequestAnimationFrame'];
-        window.cancelAnimationFrame = (window[vp+'CancelAnimationFrame'] || window[vp+'CancelRequestAnimationFrame']);
-    }
-    if (/iP(ad|hone|od).*OS 6/.test(window.navigator.userAgent) || // iOS6 is buggy
-        !window.requestAnimationFrame || !window.cancelAnimationFrame) {
-        var lastTime = 0;
-        window.requestAnimationFrame = function(callback) {
-            var now = Date.now();
-            var nextTime = Math.max(lastTime + 16, now);
-            return setTimeout(function() { callback(lastTime = nextTime); },
-                              nextTime - now);
-        };
-        window.cancelAnimationFrame = clearTimeout;
-    }
-}());
+/* global TweenLite, Power3 */
 
-// Start of app
+var canvas = document.getElementById('game');
+var backgroundCanvas = document.getElementById('background');
+var ctx = canvas.getContext('2d');
+var backgroundCtx = backgroundCanvas.getContext('2d');
+
+var canvasWidth = canvas.width;
+var canvasHeight = canvas.height;
+
+window.CARDBACKIMAGE = new Image();
+window.CARDBACKIMAGE.src = 'back.gif';
+
 window.CARDSIMAGE = new Image();
 window.CARDSIMAGE.src = 'cards.png';
 window.CARDSIMAGE.onload = function() {
-  var count = 0;
-
-  var paint = function() {
-    // Clear the screen
-    ctx.fillRect(0,0, canvas.width, canvas.height);
-
-    // start drawing in the middle again
-    // drawCard(deck.cards[44], x, y , 1, currentAngle);  // 8 of hearts
-    deck.cards[44].x += 10;
-    deck.cards[44].y += 10;
-    deck.cards[44].rotation += Math.PI / 30;
-    deck.cards[44].draw(ctx);
-    
-    if (count++ < 60) {
-      window.requestAnimationFrame(paint);
+  window.currentCard = 0;
+  var interval = setInterval(function() {
+    if (Math.random() > 0.5) {
+      deck.cards[window.currentCard].hidden = false;
     }
-  };
+    TweenLite.to(deck.cards[window.currentCard], 0.7, {x: Math.random() * 1000, ease: Power3.easeInOut});
+    TweenLite.to(deck.cards[window.currentCard], 0.7, {y: Math.random() * 750, ease: Power3.easeInOut});
+    TweenLite.to(deck.cards[window.currentCard], 0.7, {rotation: Math.PI, ease: Power3.easeInOut});
+    if (window.currentCard < deck.cards.length - 1) {
+      window.currentCard++;
+    }
+    else {
+      clearInterval(interval);
+    }
+  }, 50);
+
+  window.requestAnimationFrame(paint);
+};
+
+var paint = function() {
+  // Clear the screen
+  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+
+  // Paint each card
+  for (var i = 0; i < deck.cards.length; i++) {
+    deck.cards[i].draw(ctx);
+  }
 
   window.requestAnimationFrame(paint);
 };
 
 var deck = require('./deck');
 deck.init();
-var canvas = document.getElementById('game');
-var ctx = canvas.getContext('2d');
-ctx.fillStyle = 'black';
 
+// Draw background
+var wood = new Image();
+wood.src = 'altwood.jpg';
+wood.onload = function() {
+  var pattern = backgroundCtx.createPattern(wood, 'repeat');
+  backgroundCtx.fillStyle = pattern;
+  backgroundCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+};
 
 // // var container = $(c).parent();
 

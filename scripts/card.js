@@ -46,7 +46,13 @@ module.exports = function(newSuit, newValue) {
     if (this.rotation !== 0) {
       ctx.rotate(this.rotation);
     }
-    ctx.drawImage(window.CARDSIMAGE, xOffset, yOffset, 71, 96, -(71 / 2), -(96 / 2), 71, 96);
+
+    if (this.hidden) {
+      ctx.drawImage(window.CARDBACKIMAGE, 0, 0, 71, 96, -(71 / 2), -(96 / 2), 71, 96);
+    }
+    else {
+      ctx.drawImage(window.CARDSIMAGE, xOffset, yOffset, 71, 96, -(71 / 2), -(96 / 2), 71, 96);
+    }
     ctx.restore();
   };
 };
