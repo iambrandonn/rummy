@@ -1,8 +1,9 @@
 body {
   background-color: white;
+  margin: 0;
 }
 
 canvas {
-  width: 75%;
+  width: 100%;
   position: absolute;
 }

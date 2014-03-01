@@ -7,11 +7,12 @@ module.exports = function(grunt) {
     },
     uglify: {
       options: {
-        sourceMap: true
+        sourceMap: false
       },
       dist: {
         files: {
           'build/app.js': [
+            'scripts/TweenLite.min.js',
             'scripts/requestAnimationFrame.min.js',
             'scripts/card.js',
             'scripts/deck.js',

@@ -1,5 +1,5 @@
 /* global Game, TweenLite, Power3, requestAnimationFrame */
-
+ 
 var app = {
   canvasElement: document.getElementById('game'),
   backgroundCanvas: document.getElementById('background'),
@@ -27,7 +27,7 @@ app.CARDSIMAGE.onload = function() {
 };
 
 // Draw background
-app.wood.src = 'altwood.jpg';
+app.wood.src = 'wood.jpg';
 app.wood.onload = function() {
   var pattern = app.backgroundCtx.createPattern(app.wood, 'repeat');
   app.backgroundCtx.fillStyle = pattern;
