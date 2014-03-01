@@ -1,4 +1,5 @@
-/* global Deck */
+/* global Deck, app */
+/* exported Game */
 
 function Game() {
   this.players = [];
@@ -10,11 +11,11 @@ function Game() {
     var ctx = window.app.ctx;
 
     // Clear the screen
-    ctx.clearRect(0, 0, window.app.canvasWidth, window.app.canvasHeight);
+    ctx.clearRect(0, 0, app.canvasWidth, app.canvasHeight);
 
     // Paint each card
     for (var i = 0; i < this.deck.cards.length; i++) {
-      this.deck.cards[i].draw(ctx);
+      this.deck.cards[i].paint(ctx);
     }
   };
 }

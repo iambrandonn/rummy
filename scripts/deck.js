@@ -1,8 +1,9 @@
 /* global Card */
+/* exported Deck */
 
 function Deck() {
   this.cards =  [];
-  
+
   this.shuffle = function() {
     this.cards = this.shuffleArray(this.cards);
   };

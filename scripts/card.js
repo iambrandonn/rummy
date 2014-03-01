@@ -1,3 +1,5 @@
+/* exported Card */
+
 function Card(newSuit, newValue) {
   this.value = newValue;
   this.suit = newSuit;
@@ -5,7 +7,7 @@ function Card(newSuit, newValue) {
   this.x = 0;
   this.y = 0;
   this.hidden = true;
-  this.draw = function(ctx) {
+  this.paint = function(ctx) {
     var xOffset, yOffset;
     switch (this.value) {
       case 'A':
