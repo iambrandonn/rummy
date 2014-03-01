@@ -1,6 +1,4 @@
-/*global CARDSIMAGE */
-
-module.exports = function(newSuit, newValue) {
+function Card(newSuit, newValue) {
   this.value = newValue;
   this.suit = newSuit;
   this.rotation = 0;
@@ -48,11 +46,11 @@ module.exports = function(newSuit, newValue) {
     }
 
     if (this.hidden) {
-      ctx.drawImage(window.CARDBACKIMAGE, 0, 0, 71, 96, -(71 / 2), -(96 / 2), 71, 96);
+      ctx.drawImage(window.app.CARDBACKIMAGE, 0, 0, 71, 96, -(71 / 2), -(96 / 2), 71, 96);
     }
     else {
-      ctx.drawImage(window.CARDSIMAGE, xOffset, yOffset, 71, 96, -(71 / 2), -(96 / 2), 71, 96);
+      ctx.drawImage(window.app.CARDSIMAGE, xOffset, yOffset, 71, 96, -(71 / 2), -(96 / 2), 71, 96);
     }
     ctx.restore();
   };
-};
+}

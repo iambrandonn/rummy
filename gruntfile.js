@@ -1,12 +1,5 @@
 module.exports = function(grunt) {
   grunt.initConfig({
-    browserify: {
-      dist: {
-        files: {
-          'build/browserify.js': ['scripts/app.js'],
-        }
-      }
-    },
     simplemocha: {
       all: {
         src: ['test/**/*.js']
@@ -20,7 +13,10 @@ module.exports = function(grunt) {
         files: {
           'build/app.js': [
             'scripts/requestAnimationFrame.min.js',
-            'build/browserify.js'
+            'scripts/card.js',
+            'scripts/deck.js',
+            'scripts/game.js',
+            'scripts/app.js',
           ]
         }
       }
@@ -33,10 +29,9 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-simple-mocha');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
-  grunt.registerTask('default', ['simplemocha', 'browserify', 'uglify']);
+  grunt.registerTask('default', ['simplemocha', 'uglify']);
 };
