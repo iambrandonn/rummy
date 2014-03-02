@@ -7,7 +7,10 @@ module.exports = function(grunt) {
     },
     uglify: {
       options: {
-        sourceMap: false
+        sourceMap: false,
+        compress: false,
+        mangle: false,
+        beautify: true
       },
       dist: {
         files: {
@@ -16,6 +19,8 @@ module.exports = function(grunt) {
             'scripts/requestAnimationFrame.min.js',
             'scripts/card.js',
             'scripts/deck.js',
+            'scripts/player.js',
+            'scripts/hand.js',
             'scripts/game.js',
             'scripts/app.js',
           ]
