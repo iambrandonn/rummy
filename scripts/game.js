@@ -9,21 +9,22 @@ function Game() {
   this.deck = new Deck();
   this.discards = [];
   this.stock = [];
+  this.melds = [];
 
-  this.scootOver = function(amount) {
-    app.leftShift = amount;
+  this.scootOver = function(newAmount) {
+    app.leftShift = newAmount;
+
     this.placeStock();
-
-    this.players[0].hand.layout(this.players[0].isComputer);
-    this.players[1].hand.layout(this.players[1].isComputer);
-
     this.placeDiscards();
+
+    this.players[0].hand.layout();
+    this.players[1].hand.layout();
   };
 
   this.deal = function() {
     this.stock = this.deck.cards.slice(0);
-    this.players[0].hand = new Hand(this.stock.splice(0, 10));
-    this.players[1].hand = new Hand(this.stock.splice(0, 10));
+    this.players[0].hand = new Hand(this.stock.splice(0, 10), false);
+    this.players[1].hand = new Hand(this.stock.splice(0, 10), true);
 
     this.placeStock();
     setTimeout(function() {
@@ -32,14 +33,15 @@ function Game() {
       TweenLite.to(app.game.discards[0], app.animationTime, {y: 350, ease: app.easing});
       setTimeout(function() {
         app.game.discards[0].hidden = false;
+        app.game.players[0].hand.layDownMelds();
       }, app.animationTime * 1000);
     }, app.animationTime * 1000);
 
     this.players[0].hand.order();
     this.players[1].hand.order();
 
-    this.players[0].hand.layout(this.players[0].isComputer);
-    this.players[1].hand.layout(this.players[1].isComputer);
+    this.players[0].hand.layout();
+    this.players[1].hand.layout();
   };
 
   this.placeStock = function() {
