@@ -2,5 +2,5 @@
 
 function Player(isComputer) {
   this.hand = null;
-  this.computer = isComputer;
+  this.isComputer = isComputer;
 }

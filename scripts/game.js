@@ -1,4 +1,4 @@
-/* global Deck, app, Player, Hand */
+/* global Deck, app, Player, Hand, TweenLite */
 /* exported Game */
 
 function Game() {
@@ -10,17 +10,50 @@ function Game() {
   this.discards = [];
   this.stock = [];
 
+  this.scootOver = function(amount) {
+    app.leftShift = amount;
+    this.placeStock();
+
+    this.players[0].hand.layout(this.players[0].isComputer);
+    this.players[1].hand.layout(this.players[1].isComputer);
+
+    this.placeDiscards();
+  };
+
   this.deal = function() {
     this.stock = this.deck.cards.slice(0);
     this.players[0].hand = new Hand(this.stock.splice(0, 10));
     this.players[1].hand = new Hand(this.stock.splice(0, 10));
+
+    this.placeStock();
+    setTimeout(function() {
+      app.game.discards.push(app.game.stock.pop());
+      TweenLite.to(app.game.discards[0], app.animationTime, {x: 600 + app.leftShift, ease: app.easing});
+      TweenLite.to(app.game.discards[0], app.animationTime, {y: 350, ease: app.easing});
+      setTimeout(function() {
+        app.game.discards[0].hidden = false;
+      }, app.animationTime * 1000);
+    }, app.animationTime * 1000);
+
     this.players[0].hand.order();
     this.players[1].hand.order();
 
-    this.discards = this.stock.splice(0, 1);
+    this.players[0].hand.layout(this.players[0].isComputer);
+    this.players[1].hand.layout(this.players[1].isComputer);
+  };
 
-    this.players[0].hand.layout(this.players[0].computer);
-    this.players[1].hand.layout(this.players[1].computer);
+  this.placeStock = function() {
+    for (var stockIndex = 0; stockIndex < this.stock.length; stockIndex++) {
+      TweenLite.to(this.stock[stockIndex], app.animationTime, {x: 400 + app.leftShift + (Math.random() * 4) - 2, ease: app.easing});
+      TweenLite.to(this.stock[stockIndex], app.animationTime, {y: 350, ease: app.easing});
+    }
+  };
+
+  this.placeDiscards = function() {
+    for (var i = 0; i < app.game.discards.length; i++) {
+      TweenLite.to(app.game.discards[i], app.animationTime, {x: 600 + app.leftShift, ease: app.easing});
+      TweenLite.to(app.game.discards[i], app.animationTime, {y: 350, ease: app.easing});
+    }
   };
 
   this.paint = function() {

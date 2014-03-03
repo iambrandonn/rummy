@@ -30,30 +30,30 @@ function Card(newSuit, newValue) {
         xOffset = 1;
         break;
       case 'J':
-        xOffset = 1 + 10 * 73;
+        xOffset = 1 + 10 * 143;
         break;
       case 'Q':
-        xOffset = 1 + 11 * 73;
+        xOffset = 1 + 11 * 143;
         break;
       case 'K':
-        xOffset = 1 + 12 * 73;
+        xOffset = 2 + 12 * 143;
         break;
       default:
-        xOffset = 1 + (parseInt(this.rank) - 1) * 73;
+        xOffset = 1 + (parseInt(this.rank) - 1) * 143;
     }
 
     switch (this.suit) {
       case 'C':
-        yOffset = 1;
-        break;
-      case 'S':
-        yOffset = 99;
+        yOffset = 0;
         break;
       case 'H':
-        yOffset = 197;
+        yOffset = 200;
+        break;
+      case 'S':
+        yOffset = 401;
         break;
       case 'D':
-        yOffset = 295;
+        yOffset = 601;
         break;
     }
 
@@ -62,13 +62,13 @@ function Card(newSuit, newValue) {
     if (this.rotation !== 0) {
       ctx.rotate(this.rotation);
     }
-    ctx.scale(2, 2);
 
     if (this.hidden) {
-      ctx.drawImage(window.app.CARDBACKIMAGE, 0, 0, 71, 96, -(71 / 2), -(96 / 2), 71, 96);
+      ctx.drawImage(window.app.CARDSIMAGE, 1869, 3, 131, 192, -71, -100, 142, 199);
     }
     else {
-      ctx.drawImage(window.app.CARDSIMAGE, xOffset, yOffset, 71, 96, -(71 / 2), -(96 / 2), 71, 96);
+      ctx.strokeRect(-72, -100, 143, 200);
+      ctx.drawImage(window.app.CARDSIMAGE, xOffset, yOffset, 142, 199, -71, -100, 142, 199);
     }
     ctx.restore();
   };

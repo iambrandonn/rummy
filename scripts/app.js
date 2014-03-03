@@ -3,7 +3,6 @@
 var app = {
   canvasElement: document.getElementById('game'),
   backgroundCanvas: document.getElementById('background'),
-  CARDBACKIMAGE: new Image(),
   CARDSIMAGE: new Image(),
   wood: new Image(),
   game: new Game(),
@@ -12,15 +11,17 @@ var app = {
   canvasWidth: null,
   canvasHeight: null,
   animationTime: 0.7,
-  easing: Power3.easeInOut
+  easing: Power3.easeInOut,
+  leftShift: 0
 };
 
 app.ctx = app.canvasElement.getContext('2d');
+app.ctx.strokeStyle = '#300';
+app.ctx.lineWidth = 1;
 app.backgroundCtx = app.backgroundCanvas.getContext('2d');
 app.canvasWidth = app.canvasElement.width;
 app.canvasHeight = app.canvasElement.height;
-app.CARDBACKIMAGE.src = 'back.gif';
-app.CARDSIMAGE.src = 'cards.png';
+app.CARDSIMAGE.src = 'cardso.png';
 
 var loaded = 0;
 var resourceCount = 2;
