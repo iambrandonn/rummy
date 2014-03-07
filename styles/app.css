@@ -1,9 +1,92 @@
 body {
   background-color: white;
   margin: 0;
+  background-image: url('../wood.jpg');
 }
 
-canvas {
-  width: 100%;
+.card {
+  background-image:url('../cards.png');
+  width: 142px;
+  height: 199px;
   position: absolute;
+  z-index: 2;
+  border: 1px solid #999;
+  border-radius: 10px;
+  transition: -webkit-transform .7s ease-in-out;
+  transition: -ms-transform .7s ease-in-out;
+  transition: transform .7s ease-in-out;
+  transform: translateX(0px) translateY(0px) rotateZ(0deg);
+}
+
+.hidden {
+  background-position-x: -1862px;
+  background-position-y: -1px;  
+}
+
+.spade {
+  background-position-y: -401px;
+}
+
+.heart {
+  background-position-y: -200px;
+}
+
+.diamond {
+  background-position-y: -601px;
+}
+
+.club {  
+  background-position-y: 0px;
+}
+
+._A {
+  background-position-x: 1px;
+}
+
+._2 {
+  background-position-x: -144px;
+}
+
+._3 {
+  background-position-x: -286px;
+}
+
+._4 {
+  background-position-x: -430px;
+}
+
+._5 {
+  background-position-x: -573px;
+}
+
+._6 {
+  background-position-x: -715px;
+}
+
+._7 {
+  background-position-x: -859px;
+}
+
+._8 {
+  background-position-x: -1001px;
+}
+
+._9 {
+  background-position-x: -1145px;
+}
+
+._10 {
+  background-position-x: -1288px;
+}
+
+._J {
+  background-position-x: -1431px;
+}
+
+._Q {
+  background-position-x: -1574px;
+}
+
+._K {
+  background-position-x: -1718px;
 }

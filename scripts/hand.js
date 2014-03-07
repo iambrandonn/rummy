@@ -1,4 +1,4 @@
-/* global TweenLite, app */
+/* global app */
 /* exported Hand */
 
 function Hand(cards, computer) {
@@ -25,16 +25,18 @@ function Hand(cards, computer) {
   this.layout = function() {
     var isOdd = (this.cards.length & 1) === 1;
     var SPACE_BETWEEN_CARDS = 30;
-    var ANGLE_BETWEEN_CARDS = 0.05;
+    var ANGLE_BETWEEN_CARDS = 1.5;
     var HEIGHT_OFFSET = -3;
     var cardsOnEachSide;
     var xValue;
+    var yValue;
     var angle;
     var curveYdiff;
+    var curZindex = 10;
 
     if (isOdd) {
       cardsOnEachSide = (this.cards.length - 1) / 2;
-      xValue = (app.canvasWidth / 2) - (SPACE_BETWEEN_CARDS * cardsOnEachSide) + app.leftShift; // Find starting point
+      xValue = (app.screenWidth / 2) - (SPACE_BETWEEN_CARDS * cardsOnEachSide) + app.leftShift - (app.cardWidth / 2); // Find starting point
 
       if (this.isComputer) {
         angle = ANGLE_BETWEEN_CARDS * cardsOnEachSide;
@@ -45,7 +47,7 @@ function Hand(cards, computer) {
     }
     else {
       cardsOnEachSide = (this.cards.length) / 2;
-      xValue = (app.canvasWidth / 2) - (SPACE_BETWEEN_CARDS * cardsOnEachSide) + 25 + app.leftShift; // Find starting point
+      xValue = (app.screenWidth / 2) - (SPACE_BETWEEN_CARDS * cardsOnEachSide) + app.leftShift - (app.cardWidth / 2); // Find starting point
 
       if (this.isComputer) {
         angle = ANGLE_BETWEEN_CARDS * cardsOnEachSide - (ANGLE_BETWEEN_CARDS / 2);
@@ -58,26 +60,26 @@ function Hand(cards, computer) {
     curveYdiff = HEIGHT_OFFSET * cardsOnEachSide;
 
     for (var i = 0; i < this.cards.length; i++) {
-      TweenLite.to(this.cards[i], app.animationTime, {x: xValue, ease: app.easing});
-      TweenLite.to(this.cards[i], app.animationTime, {rotation: angle, ease: app.easing});
-      xValue += SPACE_BETWEEN_CARDS;
+      this.cards[i].updateLayout(xValue, yValue, angle);
 
       if (this.isComputer) {
         angle -= ANGLE_BETWEEN_CARDS;
-        TweenLite.to(this.cards[i], app.animationTime, {y: -25, ease: app.easing});
+        yValue = -25;
       }
       else {
         angle += ANGLE_BETWEEN_CARDS;
-        this.cards[i].hidden = false;
-        TweenLite.to(this.cards[i], app.animationTime, {y: 625 - curveYdiff, ease: app.easing});
+        this.cards[i].show();
+        yValue = app.screenHeight - app.cardHeight - 20 - curveYdiff;
       }
 
+      xValue += SPACE_BETWEEN_CARDS;
       curveYdiff -= HEIGHT_OFFSET;
       if (curveYdiff >= 0) {
         HEIGHT_OFFSET = -HEIGHT_OFFSET;
         curveYdiff -= HEIGHT_OFFSET;
       }
 
+      this.cards[i].setZ(curZindex++);
     }
   };
 

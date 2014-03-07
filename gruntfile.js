@@ -1,5 +1,21 @@
+/* global module */
+
 module.exports = function(grunt) {
   grunt.initConfig({
+    cssmin: {
+      combine: {
+        files: {
+          'build/app.min.css': ['build/app.css']
+        }
+      }
+    },
+    myth: {
+      dist: {
+        files: {
+          'build/app.css': 'styles/app.css'
+        }
+      }
+    },
     simplemocha: {
       all: {
         src: ['test/**/*.js']
@@ -7,7 +23,7 @@ module.exports = function(grunt) {
     },
     uglify: {
       options: {
-        sourceMap: false,
+        sourceMap: true,
         compress: false,
         mangle: false,
         beautify: true
@@ -15,8 +31,7 @@ module.exports = function(grunt) {
       dist: {
         files: {
           'build/app.js': [
-            'scripts/TweenLite.min.js',
-            'scripts/requestAnimationFrame.min.js',
+            'scripts/modernizr.js',
             'scripts/card.js',
             'scripts/deck.js',
             'scripts/player.js',
@@ -31,6 +46,10 @@ module.exports = function(grunt) {
       scripts: {
         files: ['scripts/**/*.js'],
         tasks: ['default']
+      },
+      css: {
+        files: ['styles/**/*.css'],
+        tasks: ['myth', 'cssmin']
       }
     }
   });
@@ -38,6 +57,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-simple-mocha');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-myth');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
 
-  grunt.registerTask('default', ['simplemocha', 'uglify']);
+  grunt.registerTask('default', ['simplemocha', 'uglify', 'myth', 'cssmin']);
 };

@@ -1,4 +1,4 @@
-/* global Deck, app, Player, Hand, TweenLite */
+/* global Deck, app, Player, Hand */
 /* exported Game */
 
 function Game() {
@@ -29,13 +29,12 @@ function Game() {
     this.placeStock();
     setTimeout(function() {
       app.game.discards.push(app.game.stock.pop());
-      TweenLite.to(app.game.discards[0], app.animationTime, {x: 600 + app.leftShift, ease: app.easing});
-      TweenLite.to(app.game.discards[0], app.animationTime, {y: 350, ease: app.easing});
+      app.game.discards[0].updateLayout(app.screenWidth  * 0.6 + app.leftShift - (app.cardWidth / 2), 250, 0);
       setTimeout(function() {
-        app.game.discards[0].hidden = false;
+        app.game.discards[0].show();
         app.game.players[0].hand.layDownMelds();
-      }, app.animationTime * 1000);
-    }, app.animationTime * 1000);
+      }, 750);
+    }, 750);
 
     this.players[0].hand.order();
     this.players[1].hand.order();
@@ -46,42 +45,21 @@ function Game() {
 
   this.placeStock = function() {
     for (var stockIndex = 0; stockIndex < this.stock.length; stockIndex++) {
-      TweenLite.to(this.stock[stockIndex], app.animationTime, {x: 400 + app.leftShift + (Math.random() * 4) - 2, ease: app.easing});
-      TweenLite.to(this.stock[stockIndex], app.animationTime, {y: 350, ease: app.easing});
+      this.stock[stockIndex].updateLayout(
+        app.screenWidth * 0.4 + app.leftShift + (Math.random() * 4) - 2 - (app.cardWidth / 2),
+        250,
+        Math.random() * 2 - 1
+      );
     }
   };
 
   this.placeDiscards = function() {
     for (var i = 0; i < app.game.discards.length; i++) {
-      TweenLite.to(app.game.discards[i], app.animationTime, {x: 600 + app.leftShift, ease: app.easing});
-      TweenLite.to(app.game.discards[i], app.animationTime, {y: 350, ease: app.easing});
-    }
-  };
-
-  this.paint = function() {
-    var ctx = window.app.ctx;
-
-    // Clear the screen
-    ctx.clearRect(0, 0, app.canvasWidth, app.canvasHeight);
-
-    // Paint each hand
-    if (this.players[0].hand) {
-      for (var cardIndex = 0; cardIndex < this.players[0].hand.cards.length; cardIndex++) {
-        this.players[0].hand.cards[cardIndex].paint(ctx);
-      }
-      for (cardIndex = this.players[1].hand.cards.length - 1; cardIndex >= 0 ; cardIndex--) {
-        this.players[1].hand.cards[cardIndex].paint(ctx);
-      }
-    }
-
-    // Paint stock
-    for (var stockIndex = 0; stockIndex < this.stock.length; stockIndex++) {
-      this.stock[stockIndex].paint(ctx);
-    }
-
-    // Paint discards
-    for (var discardIndex = 0; discardIndex < this.discards.length; discardIndex++) {
-      this.discards[discardIndex].paint(ctx);
+      app.game.discards[i].updateLayout(
+        600 + app.leftShift,
+        350,
+        0
+      );
     }
   };
 }

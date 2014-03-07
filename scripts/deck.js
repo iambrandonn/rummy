@@ -46,21 +46,28 @@ function Deck() {
     return newArray;
   };
 
+  this.addElementsToDom = function() {
+    var body = document.body;
+
+    for (var i = 0; i < this.cards.length; i++) {
+      body.appendChild(this.cards[i].element);
+    }
+  };
 
   for (var suit = 0; suit <= 3; suit++) {
     var suitValue;
     switch (suit) {
       case 0:
-        suitValue = 'C';
+        suitValue = 'club';
         break;
       case 1:
-        suitValue = 'S';
+        suitValue = 'spade';
         break;
       case 2:
-        suitValue = 'H';
+        suitValue = 'heart';
         break;
       case 3:
-        suitValue = 'D';
+        suitValue = 'diamond';
         break;
     }
     this.cards.push(new Card(suitValue, 'A'));
@@ -79,4 +86,5 @@ function Deck() {
   }
 
   this.shuffle();
+  this.addElementsToDom();
 }

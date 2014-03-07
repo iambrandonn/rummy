@@ -4,7 +4,6 @@
   "globals": { "MY_GLOBAL": false },
   "strict": false,
   "predef": [
-    "module",
     "require"
   ]
 }
