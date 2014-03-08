@@ -58,8 +58,15 @@ function Hand(cards, computer) {
     }
 
     curveYdiff = HEIGHT_OFFSET * cardsOnEachSide;
-
+    if (this.isComputer) {
+      yValue = -25;
+    }
+    else {
+      yValue = app.screenHeight - app.cardHeight - 20 - curveYdiff;
+    }
+console.log('hand');
     for (var i = 0; i < this.cards.length; i++) {
+this.cards[i].log();
       this.cards[i].updateLayout(xValue, yValue, angle);
 
       if (this.isComputer) {

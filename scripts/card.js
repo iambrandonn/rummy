@@ -7,6 +7,8 @@ function Card(newSuit, newValue) {
   this.element = document.createElement('div');
   this.element.classList.add('card');
   this.element.classList.add('hidden');
+  this.element.classList.add('_' + this.rank);
+  this.element.classList.add(this.suit);
 
   this.findNumericRank = function() {
     switch (this.rank) {
@@ -33,15 +35,15 @@ function Card(newSuit, newValue) {
 
   this.show = function() {
     this.element.classList.remove('hidden');
-    this.element.classList.add('_' + this.rank);
-    this.element.classList.add(this.suit);
   };
 
   this.hide = function() {
-    this.element.classList.remove('_' + this.rank);
-    this.element.classList.remove(this.suit);
     this.element.classList.add('hidden');
   };
+
+  this.log = function() {
+    console.log(this.rank + '\t' + this.suit);
+  }
 
   this.numericRank = this.findNumericRank();
 }

@@ -32,7 +32,7 @@ function Game() {
       app.game.discards[0].updateLayout(app.screenWidth  * 0.6 + app.leftShift - (app.cardWidth / 2), 250, 0);
       setTimeout(function() {
         app.game.discards[0].show();
-        app.game.players[0].hand.layDownMelds();
+        //app.game.players[0].hand.layDownMelds();
       }, 750);
     }, 750);
 
@@ -44,7 +44,9 @@ function Game() {
   };
 
   this.placeStock = function() {
+console.log('stock');
     for (var stockIndex = 0; stockIndex < this.stock.length; stockIndex++) {
+this.stock[stockIndex].log();
       this.stock[stockIndex].updateLayout(
         app.screenWidth * 0.4 + app.leftShift + (Math.random() * 4) - 2 - (app.cardWidth / 2),
         250,
@@ -54,7 +56,9 @@ function Game() {
   };
 
   this.placeDiscards = function() {
+console.log('discards');
     for (var i = 0; i < app.game.discards.length; i++) {
+this.discards[i].log();
       app.game.discards[i].updateLayout(
         600 + app.leftShift,
         350,

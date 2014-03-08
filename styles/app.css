@@ -19,8 +19,8 @@ body {
 }
 
 .hidden {
-  background-position-x: -1862px;
-  background-position-y: -1px;  
+  background-position-x: -1862px !important;
+  background-position-y: -1px !important;  
 }
 
 .spade {
