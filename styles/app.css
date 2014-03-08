@@ -90,3 +90,11 @@ body {
 ._K {
   background-position-x: -1718px;
 }
+
+.playerHand {
+  transform-origin: 72px 800px;
+}
+
+.computerHand {
+  transform-origin: 72px -800px;
+}

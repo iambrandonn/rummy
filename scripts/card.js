@@ -1,4 +1,4 @@
-/* global Modernizr */
+/* global Modernizr, console */
 /* exported Card */
 
 function Card(newSuit, newValue) {
@@ -43,7 +43,25 @@ function Card(newSuit, newValue) {
 
   this.log = function() {
     console.log(this.rank + '\t' + this.suit);
-  }
+  };
+
+  this.setPlayerHand = function(isPlayerHand) {
+    if (isPlayerHand) {
+      this.element.classList.add('playerHand');
+    }
+    else {
+      this.element.classList.remove('playerHand');
+    }
+  };
+
+  this.setComputerHand = function(isComputerHand) {
+    if (isComputerHand) {
+      this.element.classList.add('computerHand');
+    }
+    else {
+      this.element.classList.remove('computerHand');
+    }
+  };
 
   this.numericRank = this.findNumericRank();
 }

@@ -24,19 +24,15 @@ function Hand(cards, computer) {
 
   this.layout = function() {
     var isOdd = (this.cards.length & 1) === 1;
-    var SPACE_BETWEEN_CARDS = 30;
-    var ANGLE_BETWEEN_CARDS = 1.5;
-    var HEIGHT_OFFSET = -3;
+    var ANGLE_BETWEEN_CARDS = 3;
     var cardsOnEachSide;
     var xValue;
     var yValue;
     var angle;
-    var curveYdiff;
     var curZindex = 10;
 
     if (isOdd) {
       cardsOnEachSide = (this.cards.length - 1) / 2;
-      xValue = (app.screenWidth / 2) - (SPACE_BETWEEN_CARDS * cardsOnEachSide) + app.leftShift - (app.cardWidth / 2); // Find starting point
 
       if (this.isComputer) {
         angle = ANGLE_BETWEEN_CARDS * cardsOnEachSide;
@@ -47,7 +43,6 @@ function Hand(cards, computer) {
     }
     else {
       cardsOnEachSide = (this.cards.length) / 2;
-      xValue = (app.screenWidth / 2) - (SPACE_BETWEEN_CARDS * cardsOnEachSide) + app.leftShift - (app.cardWidth / 2); // Find starting point
 
       if (this.isComputer) {
         angle = ANGLE_BETWEEN_CARDS * cardsOnEachSide - (ANGLE_BETWEEN_CARDS / 2);
@@ -57,33 +52,26 @@ function Hand(cards, computer) {
       }
     }
 
-    curveYdiff = HEIGHT_OFFSET * cardsOnEachSide;
+    xValue = (app.screenWidth / 2) - app.leftShift - (app.cardWidth / 2); // Find starting point
+
     if (this.isComputer) {
-      yValue = -25;
+      yValue = -100;
     }
     else {
-      yValue = app.screenHeight - app.cardHeight - 20 - curveYdiff;
+      yValue = app.screenHeight - app.cardHeight - 30;
     }
-console.log('hand');
+
     for (var i = 0; i < this.cards.length; i++) {
-this.cards[i].log();
       this.cards[i].updateLayout(xValue, yValue, angle);
 
       if (this.isComputer) {
         angle -= ANGLE_BETWEEN_CARDS;
-        yValue = -25;
+        this.cards[i].setComputerHand(true);
       }
       else {
         angle += ANGLE_BETWEEN_CARDS;
         this.cards[i].show();
-        yValue = app.screenHeight - app.cardHeight - 20 - curveYdiff;
-      }
-
-      xValue += SPACE_BETWEEN_CARDS;
-      curveYdiff -= HEIGHT_OFFSET;
-      if (curveYdiff >= 0) {
-        HEIGHT_OFFSET = -HEIGHT_OFFSET;
-        curveYdiff -= HEIGHT_OFFSET;
+        this.cards[i].setPlayerHand(true);
       }
 
       this.cards[i].setZ(curZindex++);
@@ -107,7 +95,8 @@ this.cards[i].log();
       }
       else {
         if (setCount > 2) {
-          this.layDownMeld(this.cards.splice(i - setCount, setCount));
+          var removed = this.cards.splice(i - setCount, setCount);
+          this.layDownMeld(removed);
         }
         setCount = 1;
       }
@@ -122,7 +111,8 @@ this.cards[i].log();
       }
       else {
         if (runCount > 2) {
-          this.layDownMeld(this.cards.splice(i - runCount, runCount));
+          var removed = this.cards.splice(i - runCount, runCount);
+          this.layDownMeld(removed);
         }
         runCount = 1;
       }
@@ -131,5 +121,9 @@ this.cards[i].log();
 
   this.layDownMeld= function(cardsToLayDown) {
     app.game.melds.push(cardsToLayDown);
+    for(var cardIndex in cardsToLayDown) {
+      cardsToLayDown[cardIndex].updateLayout(0, 0, 0);
+      cardsToLayDown[cardIndex].show();
+    }
   };
 }
