@@ -47,7 +47,7 @@ function Game() {
     for (var stockIndex = 0; stockIndex < this.stock.length; stockIndex++) {
       this.stock[stockIndex].updateLayout(
         (app.screenWidth * app.handsCenteredOn) - 100 + (Math.random() * 4) - 2 - (app.cardWidth / 2),
-        250,
+        app.stockY,
         Math.random() * 2 - 1
       );
     }
@@ -57,7 +57,7 @@ function Game() {
     for (var i = 0; i < app.game.discards.length; i++) {
       app.game.discards[i].updateLayout(
         (app.screenWidth * app.handsCenteredOn) + 100 + (Math.random() * 4) - 2 - (app.cardWidth / 2),
-        250,
+        app.stockY,
         0
       );
     }

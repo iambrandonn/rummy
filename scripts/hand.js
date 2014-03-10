@@ -55,10 +55,10 @@ function Hand(cards, computer) {
     xValue = (app.screenWidth * app.handsCenteredOn)  - (app.cardWidth / 2); // Find starting point
 
     if (this.isComputer) {
-      yValue = -100;
+      yValue = app.opponentY;
     }
     else {
-      yValue = app.screenHeight - app.cardHeight - 30;
+      yValue = app.playerY;
     }
 
     for (var i = 0; i < this.cards.length; i++) {
