@@ -52,7 +52,7 @@ function Hand(cards, computer) {
       }
     }
 
-    xValue = (app.screenWidth / 2) - app.leftShift - (app.cardWidth / 2); // Find starting point
+    xValue = (app.screenWidth * app.handsCenteredOn)  - (app.cardWidth / 2); // Find starting point
 
     if (this.isComputer) {
       yValue = -100;

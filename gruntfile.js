@@ -32,6 +32,7 @@ module.exports = function(grunt) {
         files: {
           'build/app.js': [
             'scripts/modernizr.js',
+            'scripts/resizeend.js',
             'scripts/card.js',
             'scripts/deck.js',
             'scripts/player.js',
