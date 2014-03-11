@@ -88,7 +88,7 @@ function Game() {
         this.melds[meldIndex][cardIndex].updateLayout(currentCardX, currentMeldY, 0);
         this.melds[meldIndex][cardIndex].setZ(zIndex);
         this.melds[meldIndex][cardIndex].show();
-        currentCardX += 40;
+        currentCardX += 23;
         zIndex++;
       }
 
