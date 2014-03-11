@@ -10,6 +10,7 @@ var app = {
   stockY: null,
   playerY: null,
   opponentY: null,
+  computerTurn: false,
   updateLayoutVariables: function() {
     app.screenWidth = window.innerWidth;
     app.screenHeight = window.innerHeight;

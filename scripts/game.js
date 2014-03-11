@@ -12,6 +12,14 @@ function Game() {
   this.melds = [];
 
   this.layout = function() {
+    if (this.melds.length > 0) {
+      this.centerHandsOn(0.65);
+    }
+    else {
+      this.centerHandsOn(0.5);
+    }
+    this.layoutMelds();
+
     this.layoutStock();
     this.layoutDiscards();
 
@@ -21,7 +29,6 @@ function Game() {
 
   this.centerHandsOn = function(percent) {
     app.handsCenteredOn = percent;
-    this.layout();
   };
 
   this.deal = function() {
@@ -30,6 +37,7 @@ function Game() {
     this.players[0].hand.order();
     this.players[1].hand = new Hand(this.stock.splice(0, 10), true);
     this.players[1].hand.order();
+
     this.layout();
 
     setTimeout(function() {
@@ -37,8 +45,14 @@ function Game() {
       app.game.layoutDiscards();
       setTimeout(function() {
         app.game.discards[0].show();
-        app.game.players[0].hand.layDownMelds();
-        app.game.players[1].hand.layDownMelds();
+        if (app.computerTurn) {
+          app.game.players[1].hand.layDownMelds();
+
+          console.err('finish this');
+        }
+        else {
+          app.game.players[0].hand.layDownMelds();
+        }
       }, 750);
     }, 750);
   };
@@ -60,6 +74,25 @@ function Game() {
         app.stockY,
         0
       );
+    }
+  };
+
+  this.layoutMelds = function() {
+    var currentMeldY = 40;
+
+    var zIndex = 10;
+
+    for (var meldIndex in this.melds) {
+      var currentCardX = 40;
+      for(var cardIndex in this.melds[meldIndex]) {
+        this.melds[meldIndex][cardIndex].updateLayout(currentCardX, currentMeldY, 0);
+        this.melds[meldIndex][cardIndex].setZ(zIndex);
+        this.melds[meldIndex][cardIndex].show();
+        currentCardX += 40;
+        zIndex++;
+      }
+
+      currentMeldY += 130;
     }
   };
 }

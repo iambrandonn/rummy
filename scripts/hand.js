@@ -66,6 +66,7 @@ function Hand(cards, computer) {
 
       if (this.isComputer) {
         angle -= ANGLE_BETWEEN_CARDS;
+        this.cards[i].show();
         this.cards[i].setComputerHand(true);
       }
       else {
@@ -83,47 +84,78 @@ function Hand(cards, computer) {
     this.layDownSets();
     this.layDownRuns();
     if (this.cards.length !== startCount) {
-      this.layout();
+      app.game.layout();
     }
   };
 
-  this.layDownSets = function() {
-    var setCount = 1;
-    for (var i = 1; i < this.cards.length; i++) {
-      if (this.cards[i].rank === this.cards[i - 1].rank) {
-        setCount++;
+  this.getSetLength = function(startIndex) {
+    var length = 1;
+    var currentIndex = startIndex + 1;
+    while (currentIndex < this.cards.length && this.cards[currentIndex].rank === this.cards[startIndex].rank) {
+      length++;
+      currentIndex++;
+    }
+
+    return length;
+  };
+
+  this.indexOf = function(suit, numericRank) {
+    for (var i = 0; i < this.cards.length; i++) {
+      if (this.cards[i].suit === suit && this.cards[i].numericRank === numericRank) {
+        return i;
       }
-      else {
-        if (setCount > 2) {
-          var removed = this.cards.splice(i - setCount, setCount);
-          this.layDownMeld(removed);
-        }
-        setCount = 1;
+    }
+
+    return -1;
+  };
+
+  this.cardIsPartOfRun = function(index) {
+    var result = [];
+
+    var offset = 1;
+    var theCard = this.cards[index];
+
+    var place = index;
+
+    do {
+      result.push(place);
+      place = this.indexOf(theCard.suit, theCard.numericRank + offset);
+      offset++;
+    } while (place >= 0);
+
+    return result;
+  };
+
+  this.layDownSets = function() {
+    // look at each card
+    for (var i = 0; i < this.cards.length; i++) {
+      var length = this.getSetLength(i);
+      if (length > 2) {
+        var removed = this.cards.splice(i, length);
+        this.layDownMeld(removed);
       }
     }
   };
 
   this.layDownRuns = function() {
-    var runCount = 1;
-    for (var i = 1; i < this.cards.length; i++) {
-      if (this.cards[i].suit === this.cards[i - 1].suit && this.cards[i].numericRank === this.cards[i - 1].numericRank + 1) {
-        runCount++;
-      }
-      else {
-        if (runCount > 2) {
-          var removed = this.cards.splice(i - runCount, runCount);
-          this.layDownMeld(removed);
+    // look at each card
+    for (var i = 0; i < this.cards.length; i++) {
+      var run = this.cardIsPartOfRun(i);
+
+      if (run.length > 2) {
+        console.log(run);
+        var removed = [];
+//        for (var runCardIndex in run) {
+        for (var runCardIndex = run.length - 1; runCardIndex >= 0; runCardIndex--) {
+          var card = this.cards.splice(run[runCardIndex], 1)[0];
+          removed.unshift(card);
         }
-        runCount = 1;
+        this.layDownMeld(removed);
       }
     }
   };
 
   this.layDownMeld= function(cardsToLayDown) {
     app.game.melds.push(cardsToLayDown);
-    for(var cardIndex in cardsToLayDown) {
-      cardsToLayDown[cardIndex].updateLayout(0, 0, 0);
-      cardsToLayDown[cardIndex].show();
-    }
   };
 }
