@@ -52,6 +52,7 @@ function Game() {
         }
         else {
           app.game.players[0].hand.layDownMelds();
+          app.game.players[1].hand.layDownMelds();
         }
       }, 750);
     }, 750);
@@ -78,8 +79,8 @@ function Game() {
   };
 
   this.layoutMelds = function() {
+    var yDistance = (app.screenHeight - 80) / this.melds.length;
     var currentMeldY = 40;
-
     var zIndex = 10;
 
     for (var meldIndex in this.melds) {
@@ -92,7 +93,12 @@ function Game() {
         zIndex++;
       }
 
-      currentMeldY += 130;
+      if (yDistance > app.cardHeight + 20) {
+        currentMeldY += app.cardHeight + 20;
+      }
+      else {
+        currentMeldY += yDistance;
+      }
     }
   };
 }
