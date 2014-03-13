@@ -46,16 +46,57 @@ function Game() {
       setTimeout(function() {
         app.game.discards[0].show();
         if (app.computerTurn) {
-          app.game.players[1].hand.layDownMelds();
-
           console.err('finish this');
+          app.game.players[1].hand.layDownMelds();
         }
         else {
-          app.game.players[0].hand.layDownMelds();
-          app.game.players[1].hand.layDownMelds();
+          app.game.draw(function() {
+            app.game.players[0].hand.layDownMelds();
+            app.game.players[0].hand.discard(function() {
+              alert('turn done!');
+            });
+          });
         }
       }, 750);
     }, 750);
+  };
+
+  this.draw = function(callback) {
+    var handleClick = function(e) {
+      var playerIndex;
+      if (app.computerTurn) {
+        playerIndex = 1;
+      }
+      else {
+        playerIndex = 0;
+      }
+
+      if (e.card === app.game.discards[app.game.discards.length - 1]) {
+        app.game.drawFromDiscards(app.game.players[playerIndex]);
+        document.removeEventListener('cardClicked', handleClick);
+        callback();
+      }
+      else if (e.card === app.game.stock[app.game.stock.length - 1]) {
+        app.game.drawFromStock(app.game.players[playerIndex]);
+        document.removeEventListener('cardClicked', handleClick);
+        callback();
+      }
+    };
+    document.addEventListener('cardClicked', handleClick);
+  };
+
+  this.drawFromStock = function(player) {
+    if (this.stock.length > 0) {
+      var card = this.stock.pop();
+      player.hand.addCard(card);
+    }
+  };
+
+  this.drawFromDiscards = function(player) {
+    if (this.discards.length > 0) {
+      var card = this.discards.pop();
+      player.hand.addCard(card);
+    }
   };
 
   this.layoutStock = function() {

@@ -66,7 +66,7 @@ function Hand(cards, computer) {
 
       if (this.isComputer) {
         angle -= ANGLE_BETWEEN_CARDS;
-        this.cards[i].show();
+        this.cards[i].hide();
         this.cards[i].setComputerHand(true);
       }
       else {
@@ -143,9 +143,7 @@ function Hand(cards, computer) {
       var run = this.cardIsPartOfRun(i);
 
       if (run.length > 2) {
-        console.log(run);
         var removed = [];
-//        for (var runCardIndex in run) {
         for (var runCardIndex = run.length - 1; runCardIndex >= 0; runCardIndex--) {
           var card = this.cards.splice(run[runCardIndex], 1)[0];
           removed.unshift(card);
@@ -155,7 +153,38 @@ function Hand(cards, computer) {
     }
   };
 
-  this.layDownMeld= function(cardsToLayDown) {
+  this.layDownMeld = function(cardsToLayDown) {
     app.game.melds.push(cardsToLayDown);
+  };
+
+  this.addCard = function(card) {
+    this.cards.push(card);
+    this.order();
+    this.layout();
+  };
+
+  this.discard = function(callback) {
+    var handleClick = function(e) {
+      var playerIndex;
+      if (app.computerTurn) {
+        playerIndex = 1;
+      }
+      else {
+        playerIndex = 0;
+      }
+
+      alert('check if card is in this hand here');
+      // if (e.card === app.game.discards[app.game.discards.length - 1]) {
+      //   app.game.drawFromDiscards(app.game.players[playerIndex]);
+      //   document.removeEventListener('cardClicked', handleClick);
+      //   callback();
+      // }
+      // else if (e.card === app.game.stock[app.game.stock.length - 1]) {
+      //   app.game.drawFromStock(app.game.players[playerIndex]);
+      //   document.removeEventListener('cardClicked', handleClick);
+      //   callback();
+      // }
+    };
+    document.addEventListener('cardClicked', handleClick);
   };
 }
