@@ -1,4 +1,4 @@
-/* global app */
+/* global app, states */
 /* exported Hand */
 
 function Hand(cards, computer) {
@@ -80,11 +80,48 @@ function Hand(cards, computer) {
   };
 
   this.layDownMelds = function() {
-    var startCount = this.cards.length;
-    this.layDownSets();
-    this.layDownRuns();
-    if (this.cards.length !== startCount) {
-      app.game.layout();
+    var setLayedDown = this.layDownSets();
+    var runLayedDown = this.layDownRuns();
+    var additions = this.layDownAdditions();
+
+    return setLayedDown || runLayedDown || additions;
+  };
+
+  this.layDownAdditions = function() {
+    var isSetMeld = function(meld) {
+      return meld[0].numericRank === meld[1].numericRank;
+    };
+
+    for (var cardIndex in this.cards) {
+      for (var meldIndex in app.game.melds) {
+        var card = this.cards[cardIndex];
+        var meld = app.game.melds[meldIndex];
+        var removed = false;
+
+        if (isSetMeld(meld)) {
+          if (card.numericRank === meld[0].numericRank) {
+            removed = true;
+            meld.push(card);
+          }
+        }
+        else {
+          if (meld[0].suit === card.suit) {
+            if (meld[0].numericRank - 1 === card.numericRank) {
+              removed = true;
+              meld.unshift(card);
+            }
+            else if (meld[meld.length - 1] + 1 === card.numericRank) {
+              removed = true;
+              meld.push(card);
+            }
+          }
+        }
+
+        if (removed) {
+          this.cards.splice(cardIndex, 1);
+          continue;
+        }
+      }
     }
   };
 
@@ -127,17 +164,24 @@ function Hand(cards, computer) {
   };
 
   this.layDownSets = function() {
+    var result = false;
+
     // look at each card
     for (var i = 0; i < this.cards.length; i++) {
       var length = this.getSetLength(i);
       if (length > 2) {
         var removed = this.cards.splice(i, length);
         this.layDownMeld(removed);
+        result = true;
       }
     }
+
+    return result;
   };
 
   this.layDownRuns = function() {
+    var result = false;
+
     // look at each card
     for (var i = 0; i < this.cards.length; i++) {
       var run = this.cardIsPartOfRun(i);
@@ -149,8 +193,11 @@ function Hand(cards, computer) {
           removed.unshift(card);
         }
         this.layDownMeld(removed);
+        result = true;
       }
     }
+
+    return result;
   };
 
   this.layDownMeld = function(cardsToLayDown) {
@@ -160,31 +207,29 @@ function Hand(cards, computer) {
   this.addCard = function(card) {
     this.cards.push(card);
     this.order();
-    this.layout();
   };
 
-  this.discard = function(callback) {
-    var handleClick = function(e) {
-      var playerIndex;
-      if (app.computerTurn) {
-        playerIndex = 1;
-      }
-      else {
-        playerIndex = 0;
-      }
+  this.playerDiscard = function(card) {
+    app.state = null;
+    var playerIndex;
+    if (app.computerTurn) {
+      playerIndex = 1;
+    }
+    else {
+      playerIndex = 0;
+    }
 
-      alert('check if card is in this hand here');
-      // if (e.card === app.game.discards[app.game.discards.length - 1]) {
-      //   app.game.drawFromDiscards(app.game.players[playerIndex]);
-      //   document.removeEventListener('cardClicked', handleClick);
-      //   callback();
-      // }
-      // else if (e.card === app.game.stock[app.game.stock.length - 1]) {
-      //   app.game.drawFromStock(app.game.players[playerIndex]);
-      //   document.removeEventListener('cardClicked', handleClick);
-      //   callback();
-      // }
-    };
-    document.addEventListener('cardClicked', handleClick);
+    var placeInHand = this.indexOf(card.suit, card.numericRank);
+
+    if (placeInHand >= 0) {
+      this.cards.splice(placeInHand, 1);
+      app.game.discards.push(card);
+      card.show();
+      app.state = states.DRAW;
+      app.toggleTurn();
+    }
+    else {
+      app.state = states.DISCARD;
+    }
   };
 }

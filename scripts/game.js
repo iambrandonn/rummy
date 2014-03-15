@@ -1,4 +1,4 @@
-/* global Deck, app, Player, Hand */
+/* global Deck, app, Player, Hand, states */
 /* exported Game */
 
 function Game() {
@@ -40,55 +40,65 @@ function Game() {
 
     this.layout();
 
+    // Wait for initial layout to finish
     setTimeout(function() {
+      // Put the first card into the discard pile
       app.game.discards.push(app.game.stock.pop());
       app.game.layoutDiscards();
+
       setTimeout(function() {
+        // Turn over the card
         app.game.discards[0].show();
+
         if (app.computerTurn) {
-          console.err('finish this');
+          console.error('finish this');
           app.game.players[1].hand.layDownMelds();
         }
         else {
-          app.game.draw(function() {
-            app.game.players[0].hand.layDownMelds();
-            app.game.players[0].hand.discard(function() {
-              alert('turn done!');
-            });
-          });
+          app.game.players[0].hand.layDownMelds();
+          app.game.layout();
+          app.state = states.DRAW;
         }
-      }, 750);
-    }, 750);
+      }, app.animationTime);
+    }, app.animationTime);
   };
 
-  this.draw = function(callback) {
-    var handleClick = function(e) {
-      var playerIndex;
-      if (app.computerTurn) {
-        playerIndex = 1;
-      }
-      else {
-        playerIndex = 0;
-      }
+  this.playerDraw = function(card) {
+    var playerIndex;
+    if (app.computerTurn) {
+      playerIndex = 1;
+    }
+    else {
+      playerIndex = 0;
+    }
 
-      if (e.card === app.game.discards[app.game.discards.length - 1]) {
-        app.game.drawFromDiscards(app.game.players[playerIndex]);
-        document.removeEventListener('cardClicked', handleClick);
-        callback();
-      }
-      else if (e.card === app.game.stock[app.game.stock.length - 1]) {
-        app.game.drawFromStock(app.game.players[playerIndex]);
-        document.removeEventListener('cardClicked', handleClick);
-        callback();
-      }
-    };
-    document.addEventListener('cardClicked', handleClick);
+    app.state = null;
+    if (card === app.game.discards[app.game.discards.length - 1]) {
+      app.game.drawFromDiscards(app.game.players[playerIndex]);
+    }
+    else if (card === app.game.stock[app.game.stock.length - 1]) {
+      app.game.drawFromStock(app.game.players[playerIndex]);
+    }
+    else {
+      app.state = states.DRAW;
+      return;
+    }
+
+    app.game.layout();
+
+    setTimeout(function() {
+      app.game.players[playerIndex].hand.layDownMelds();
+      app.game.layout();
+
+      app.state = states.DISCARD;
+    }, app.animationTime);
   };
 
   this.drawFromStock = function(player) {
     if (this.stock.length > 0) {
       var card = this.stock.pop();
       player.hand.addCard(card);
+      card.log();
     }
   };
 
@@ -96,26 +106,29 @@ function Game() {
     if (this.discards.length > 0) {
       var card = this.discards.pop();
       player.hand.addCard(card);
+      card.log();
     }
   };
 
   this.layoutStock = function() {
     for (var stockIndex = 0; stockIndex < this.stock.length; stockIndex++) {
       this.stock[stockIndex].updateLayout(
-        (app.screenWidth * app.handsCenteredOn) - 100 + (Math.random() * 4) - 2 - (app.cardWidth / 2),
+        (app.screenWidth * app.handsCenteredOn) - 100 - (app.cardWidth / 2),
         app.stockY,
-        Math.random() * 2 - 1
+        0//Math.random() * 2 - 1
       );
     }
   };
 
   this.layoutDiscards = function() {
+    var zIndex = 10;
     for (var i = 0; i < app.game.discards.length; i++) {
       app.game.discards[i].updateLayout(
-        (app.screenWidth * app.handsCenteredOn) + 100 + (Math.random() * 4) - 2 - (app.cardWidth / 2),
+        (app.screenWidth * app.handsCenteredOn) + 100 - (app.cardWidth / 2),
         app.stockY,
         0
       );
+      app.game.discards[i].setZ(zIndex++);
     }
   };
 
@@ -128,10 +141,9 @@ function Game() {
       var currentCardX = 40;
       for(var cardIndex in this.melds[meldIndex]) {
         this.melds[meldIndex][cardIndex].updateLayout(currentCardX, currentMeldY, 0);
-        this.melds[meldIndex][cardIndex].setZ(zIndex);
+        this.melds[meldIndex][cardIndex].setZ(zIndex++);
         this.melds[meldIndex][cardIndex].show();
         currentCardX += 23;
-        zIndex++;
       }
 
       if (yDistance > app.cardHeight + 20) {

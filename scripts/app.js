@@ -1,4 +1,4 @@
-/* global Game */
+/* global Game, states */
  
 var app = {
   game: new Game(),
@@ -11,6 +11,16 @@ var app = {
   playerY: null,
   opponentY: null,
   computerTurn: false,
+  animationTime: 750,
+  state: null,
+  toggleTurn: function() {
+    setTimeout(function() {
+      app.computerTurn = !app.computerTurn;
+      if (app.computerTurn) {
+        app.game.players[1].autoPlay();
+      }
+    }, app.animationTime);
+  },
   updateLayoutVariables: function() {
     app.screenWidth = window.innerWidth;
     app.screenHeight = window.innerHeight;
@@ -66,3 +76,18 @@ window.addEventListener('resize:end', function() {
   app.game.layout();
 }, false);
 
+document.addEventListener('cardClicked', function(e) {
+  if (app.computerTurn) {
+    return;
+  }
+
+  switch (app.state) {
+    case states.DRAW:
+      app.game.playerDraw(e.card);
+      break;
+    case states.DISCARD:
+      app.game.players[0].hand.playerDiscard(e.card);
+      app.game.layout();
+      break;
+  }
+});
