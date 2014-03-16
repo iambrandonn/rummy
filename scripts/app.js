@@ -11,7 +11,7 @@ var app = {
   playerY: null,
   opponentY: null,
   computerTurn: false,
-  animationTime: 750,
+  animationTime: 600,
   state: null,
   toggleTurn: function() {
     setTimeout(function() {

@@ -110,7 +110,7 @@ function Hand(cards, computer) {
               removed = true;
               meld.unshift(card);
             }
-            else if (meld[meld.length - 1] + 1 === card.numericRank) {
+            else if (meld[meld.length - 1].numericRank + 1 === card.numericRank) {
               removed = true;
               meld.push(card);
             }

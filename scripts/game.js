@@ -55,7 +55,6 @@ function Game() {
           app.game.players[1].hand.layDownMelds();
         }
         else {
-          app.game.players[0].hand.layDownMelds();
           app.game.layout();
           app.state = states.DRAW;
         }
@@ -133,21 +132,26 @@ function Game() {
   };
 
   this.layoutMelds = function() {
-    var yDistance = (app.screenHeight - 80) / this.melds.length;
-    var currentMeldY = 40;
+    var yDistance = (app.screenHeight - 30) / this.melds.length;
+    var currentMeldY = 15;
     var zIndex = 10;
+    var cardScale = this.melds.length > 3 ? 0.7 : 0.9;
+    var cardOffset = this.melds.length > 3 ? 42 : 10;
 
     for (var meldIndex in this.melds) {
       var currentCardX = 40;
       for(var cardIndex in this.melds[meldIndex]) {
-        this.melds[meldIndex][cardIndex].updateLayout(currentCardX, currentMeldY, 0);
+        this.melds[meldIndex][cardIndex].updateLayout(currentCardX, currentMeldY, 0, cardScale);
         this.melds[meldIndex][cardIndex].setZ(zIndex++);
+        this.melds[meldIndex][cardIndex].element.classList.remove('computerHand');
+        this.melds[meldIndex][cardIndex].element.classList.remove('playerHand');
+        this.melds[meldIndex][cardIndex].element.classList.add('meld');
         this.melds[meldIndex][cardIndex].show();
         currentCardX += 23;
       }
 
-      if (yDistance > app.cardHeight + 20) {
-        currentMeldY += app.cardHeight + 20;
+      if (yDistance > app.cardHeight - cardOffset) {
+        currentMeldY += app.cardHeight - cardOffset;
       }
       else {
         currentMeldY += yDistance;

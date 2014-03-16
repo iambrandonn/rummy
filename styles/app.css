@@ -98,3 +98,7 @@ body {
 .computerHand {
   transform-origin: 72px -800px;
 }
+
+.meld {
+  transform-origin: 0px 0px;
+}

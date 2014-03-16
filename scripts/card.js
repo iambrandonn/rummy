@@ -33,8 +33,15 @@ function Card(newSuit, newValue) {
     }
   };
 
-  this.updateLayout = function(x, y, rotation) {
-    this.element.style[Modernizr.prefixed('transform')] = 'translateX(' + (x) + 'px) translateY(' + y + 'px) rotateZ(' + rotation + 'deg)';
+  this.updateLayout = function(x, y, rotation, scale) {
+    var transformDefinition = 'translateX(' + (x) + 'px) translateY(' + y + 'px)';
+    if (rotation !== undefined) {
+      transformDefinition += ' rotateZ(' + rotation + 'deg)';
+    }
+    if (scale !== undefined) {
+      transformDefinition += ' scale(' + scale + ')';
+    }
+    this.element.style[Modernizr.prefixed('transform')] = transformDefinition;
   };
 
   this.setZ = function(z) {
