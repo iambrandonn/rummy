@@ -53,22 +53,14 @@ function Card(newSuit, newValue) {
     console.log(this.rank + '\t' + this.suit);
   };
 
-  this.setPlayerHand = function(isPlayerHand) {
-    if (isPlayerHand) {
-      this.element.classList.add('playerHand');
-    }
-    else {
-      this.element.classList.remove('playerHand');
-    }
+  this.setPlayerHand = function() {
+    this.element.classList.add('playerHand');
+    this.element.classList.remove('computerHand');
   };
 
-  this.setComputerHand = function(isComputerHand) {
-    if (isComputerHand) {
-      this.element.classList.add('computerHand');
-    }
-    else {
-      this.element.classList.remove('computerHand');
-    }
+  this.setComputerHand = function() {
+    this.element.classList.add('computerHand');
+    this.element.classList.remove('playerHand');
   };
 
   this.numericRank = this.findNumericRank();

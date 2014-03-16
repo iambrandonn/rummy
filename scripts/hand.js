@@ -67,12 +67,12 @@ function Hand(cards, computer) {
       if (this.isComputer) {
         angle -= ANGLE_BETWEEN_CARDS;
         this.cards[i].hide();
-        this.cards[i].setComputerHand(true);
+        this.cards[i].setComputerHand();
       }
       else {
         angle += ANGLE_BETWEEN_CARDS;
         this.cards[i].show();
-        this.cards[i].setPlayerHand(true);
+        this.cards[i].setPlayerHand();
       }
 
       this.cards[i].setZ(curZindex++);
