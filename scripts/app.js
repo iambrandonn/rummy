@@ -1,6 +1,7 @@
 /* global Game, states */
  
 var app = {
+  computerGoesFirst: false,
   game: new Game(),
   handsCenteredOn: 0.5,
   cardWidth: 142,
@@ -12,15 +13,6 @@ var app = {
   opponentY: null,
   computerTurn: false,
   animationTime: 600,
-  state: null,
-  toggleTurn: function() {
-    setTimeout(function() {
-      app.computerTurn = !app.computerTurn;
-      if (app.computerTurn) {
-        app.game.players[1].autoPlay();
-      }
-    }, app.animationTime);
-  },
   updateLayoutVariables: function() {
     app.screenWidth = window.innerWidth;
     app.screenHeight = window.innerHeight;
@@ -66,28 +58,32 @@ var app = {
   }
 };
 
-setTimeout(function() {
+// Load the card images and then start the game
+var cardImage = new Image();
+cardImage.onload = function() {
   app.updateLayoutVariables();
   app.game.deal();
-}, 100);
+};
+cardImage.src = 'cards.png';
 
+// When the browser resizes we need to update our layout
 window.addEventListener('resize:end', function() {
   app.updateLayoutVariables();
   app.game.layout();
 }, false);
 
 document.addEventListener('cardClicked', function(e) {
-  if (app.computerTurn) {
-    return;
-  }
-
-  switch (app.state) {
-    case states.DRAW:
-      app.game.playerDraw(e.card);
-      break;
-    case states.DISCARD:
-      app.game.players[0].hand.playerDiscard(e.card);
-      app.game.layout();
-      break;
+  // Nothing should happend unless it is the players turn
+  if (!app.game.computerTurn) {
+    // Depending on what we are waiting for, react appropriately
+    switch (app.game.state) {
+      case states.DRAW:
+        app.game.playerDraw(e.card);
+        break;
+      case states.DISCARD:
+        app.game.players[0].hand.playerDiscard(e.card);
+        app.game.layout();
+        break;
+    }
   }
 });

@@ -10,6 +10,18 @@ function Game() {
   this.discards = [];
   this.stock = [];
   this.melds = [];
+  this.computerTurn = false;
+  this.state = null;
+
+  this.toggleTurn = function() {
+    var that = this;
+    setTimeout(function() {
+      that.computerTurn = !that.computerTurn;
+      if (that.computerTurn) {
+        that.players[1].autoPlay();
+      }
+    }, app.animationTime);
+  };
 
   this.layout = function() {
     if (this.melds.length > 0) {
@@ -50,11 +62,11 @@ function Game() {
         // Turn over the card
         app.game.discards[0].show();
 
-        if (app.computerTurn) {
+        if (app.computerGoesFirst) {
           app.game.players[1].autoPlay();
         }
         else {
-          app.state = states.DRAW;
+          app.game.state = states.DRAW;
         }
       }, app.animationTime);
     }, app.animationTime);
@@ -62,14 +74,14 @@ function Game() {
 
   this.playerDraw = function(card) {
     var playerIndex;
-    if (app.computerTurn) {
+    if (this.computerTurn) {
       playerIndex = 1;
     }
     else {
       playerIndex = 0;
     }
 
-    app.state = null;
+    app.game.state = null;
     if (card === app.game.discards[app.game.discards.length - 1]) {
       app.game.drawFromDiscards(app.game.players[playerIndex]);
     }
@@ -77,7 +89,7 @@ function Game() {
       app.game.drawFromStock(app.game.players[playerIndex]);
     }
     else {
-      app.state = states.DRAW;
+      app.game.state = states.DRAW;
       return;
     }
 
@@ -87,7 +99,7 @@ function Game() {
       app.game.players[playerIndex].hand.layDownMelds();
       app.game.layout();
 
-      app.state = states.DISCARD;
+      app.game.state = states.DISCARD;
     }, app.animationTime);
   };
 

@@ -210,9 +210,9 @@ function Hand(cards, computer) {
   };
 
   this.playerDiscard = function(card) {
-    app.state = null;
+    app.game.state = null;
     var playerIndex;
-    if (app.computerTurn) {
+    if (app.game.computerTurn) {
       playerIndex = 1;
     }
     else {
@@ -225,11 +225,11 @@ function Hand(cards, computer) {
       this.cards.splice(placeInHand, 1);
       app.game.discards.push(card);
       card.show();
-      app.state = states.DRAW;
-      app.toggleTurn();
+      app.game.state = states.DRAW;
+      app.game.toggleTurn();
     }
     else {
-      app.state = states.DISCARD;
+      app.game.state = states.DISCARD;
     }
   };
 }
