@@ -13,7 +13,7 @@ function Hand(cards, computer) {
           return 1;
         }
         else if (a.numericRank === b.numericRank) {
-          return 0;
+          return a.suit < b.suit;
         }
         else {
           return -1;

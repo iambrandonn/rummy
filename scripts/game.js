@@ -51,11 +51,9 @@ function Game() {
         app.game.discards[0].show();
 
         if (app.computerTurn) {
-          console.error('finish this');
-          app.game.players[1].hand.layDownMelds();
+          app.game.players[1].autoPlay();
         }
         else {
-          app.game.layout();
           app.state = states.DRAW;
         }
       }, app.animationTime);
