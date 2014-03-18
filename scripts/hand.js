@@ -217,28 +217,4 @@ function Hand(cards, computer) {
     this.cards.push(card);
     this.order();
   };
-
-  this.playerDiscard = function(card) {
-    app.game.state = null;
-    var playerIndex;
-    if (app.game.computerTurn) {
-      playerIndex = 1;
-    }
-    else {
-      playerIndex = 0;
-    }
-
-    var placeInHand = this.indexOf(card.suit, card.numericRank);
-
-    if (placeInHand >= 0) {
-      this.cards.splice(placeInHand, 1);
-      app.game.discards.push(card);
-      card.show();
-      app.game.state = states.DRAW;
-      app.game.toggleTurn();
-    }
-    else {
-      app.game.state = states.DISCARD;
-    }
-  };
 }

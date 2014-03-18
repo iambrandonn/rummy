@@ -1,3 +1,4 @@
+// This debounces the resize event
 (function(window) {
   var currentOrientation, debounce, dispatchResizeEndEvent, document, events, getCurrentOrientation, initialOrientation, resizeDebounceTimeout;
   document = window.document;

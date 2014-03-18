@@ -18,7 +18,7 @@ function Player(isComputer) {
       setTimeout(function() {
         console.error('logic here to figure out AI of which card to discard');
 
-        that.hand.playerDiscard(that.hand.cards[0]);
+        that.discard(that.hand.cards[0]);
 
         app.game.layout();
       }, app.animationTime);
@@ -65,4 +65,27 @@ function Player(isComputer) {
     }
   };
 
+  this.discard = function(card) {
+    app.game.state = null;
+    var playerIndex;
+    if (app.game.computerTurn) {
+      playerIndex = 1;
+    }
+    else {
+      playerIndex = 0;
+    }
+
+    var placeInHand = this.hand.indexOf(card.suit, card.numericRank);
+
+    if (placeInHand >= 0) {
+      this.hand.cards.splice(placeInHand, 1);
+      app.game.discards.push(card);
+      card.show();
+      app.game.state = states.DRAW;
+      app.game.toggleTurn();
+    }
+    else {
+      app.game.state = states.DISCARD;
+    }
+  };
 }

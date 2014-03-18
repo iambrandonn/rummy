@@ -84,7 +84,7 @@ var app = {
             app.players[0].draw(e.card);
             break;
           case states.DISCARD:
-            app.players[0].hand.playerDiscard(e.card);
+            app.players[0].discard(e.card);
             app.game.layout();
             break;
         }
