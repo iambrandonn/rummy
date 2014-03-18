@@ -1,9 +1,10 @@
-/* global app, states */
+/* global app */
 /* exported Hand */
 
 function Hand(cards, computer) {
   this.cards = cards;
   this.isComputer = computer;
+  this.isPretend = false; // When testing for valid melds, we create some pretend hands
 
   this.order = function() {
     // order by rank
@@ -106,7 +107,9 @@ function Hand(cards, computer) {
         if (isSetMeld(meld)) {
           if (card.numericRank === meld[0].numericRank) {
             removed = true;
-            meld.push(card);
+            if (!this.isPretend) {
+              meld.push(card);
+            }
           }
         }
         else {
@@ -117,7 +120,9 @@ function Hand(cards, computer) {
             }
             else if (meld[meld.length - 1].numericRank + 1 === card.numericRank) {
               removed = true;
-              meld.push(card);
+              if (!this.isPretend) {
+                meld.push(card);
+              }
             }
           }
         }
@@ -210,11 +215,35 @@ function Hand(cards, computer) {
   };
 
   this.layDownMeld = function(cardsToLayDown) {
-    app.game.melds.push(cardsToLayDown);
+    if (!this.isPretend) {
+      app.game.melds.push(cardsToLayDown);
+    }
   };
 
   this.addCard = function(card) {
     this.cards.push(card);
     this.order();
+  };
+
+  this.hasThisNumberCard = function(card) {
+    return this.indexOf('heart', card.numericRank) >= 0 ||
+      this.indexOf('diamond', card.numericRank) >= 0 ||
+      this.indexOf('club', card.numericRank) >= 0 ||
+      this.indexOf('spade', card.numericRank) >= 0;
+  };
+
+  this.hasCardNearThis = function(card) {
+    return this.indexOf(card.suit, card.numericRank - 1) >= 0 ||
+      this.indexOf(card.suit, card.numericRank + 1) >= 0;
+  };
+
+  this.wouldResultInMeld = function(card) {
+    // Make new fake hand with the card added
+    var fakeHand = new Hand(this.cards.concat([card]));
+    fakeHand.isPretend = true;
+    fakeHand.order();
+    var result = fakeHand.layDownMelds();
+    fakeHand = null;
+    return result;
   };
 }

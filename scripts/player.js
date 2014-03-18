@@ -5,6 +5,21 @@ function Player(isComputer) {
   this.hand = null;
   this.isComputer = isComputer;
 
+  this.shouldChoose = function(cardShowing) {
+    // If it will get you a meld, do it
+    if (this.hand.wouldResultInMeld(cardShowing)) {
+      return true;
+    }
+    // If you have no cards near it, don't
+    else if (!this.hand.hasThisNumberCard(cardShowing) && !this.hand.hasCardNearThis(cardShowing)) {
+      return false;
+    }
+    else {
+      // Otherwise, pick randomly
+      return Math.random() > 0.5;
+    }
+  };
+
   this.autoPlay = function() {
     var that = this;
     var layedDown = this.hand.layDownMelds();
@@ -12,8 +27,12 @@ function Player(isComputer) {
     var delay = layedDown ? app.animationTime : 0;
 
     setTimeout(function() {
-      console.error('logic here to figure out AI of when to draw from which pile');
-      that.draw(app.game.stock[app.game.stock.length - 1]);
+      if (that.shouldChoose(app.game.discards[app.game.discards.length - 1])) {
+        that.draw(app.game.discards[app.game.discards.length - 1]);
+      }
+      else {
+        that.draw(app.game.stock[app.game.stock.length - 1]);
+      }
 
       setTimeout(function() {
         console.error('logic here to figure out AI of which card to discard');
@@ -53,7 +72,6 @@ function Player(isComputer) {
     if (app.game.stock.length > 0) {
       var card = app.game.stock.pop();
       this.hand.addCard(card);
-      card.log();
     }
   };
 
@@ -61,7 +79,6 @@ function Player(isComputer) {
     if (app.game.discards.length > 0) {
       var card = app.game.discards.pop();
       this.hand.addCard(card);
-      card.log();
     }
   };
 
