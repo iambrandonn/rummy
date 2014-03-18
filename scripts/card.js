@@ -4,6 +4,11 @@
 function Card(newSuit, newValue) {
   this.rank = newValue;
   this.suit = newSuit;
+  this.x = 0;
+  this.y = 0;
+  this.rotation = 0;
+  this.scale = 1;
+  this.z = 1;
   this.element = document.createElement('div');
   this.element.card = this;
   this.element.classList.add('card');
@@ -34,18 +39,28 @@ function Card(newSuit, newValue) {
   };
 
   this.updateLayout = function(x, y, rotation, scale) {
-    var transformDefinition = 'translateX(' + (x) + 'px) translateY(' + y + 'px)';
-    if (rotation !== undefined) {
-      transformDefinition += ' rotateZ(' + rotation + 'deg)';
+    if (x !== this.x || y !== this.y || rotation !== this.rotation || scale !== this.scale) {
+      this.x = x;
+      this.y = y;
+      this.rotation = rotation;
+      this.scale = scale;
+
+      var transformDefinition = 'translateX(' + (x) + 'px) translateY(' + y + 'px)';
+      if (rotation !== undefined) {
+        transformDefinition += ' rotateZ(' + rotation + 'deg)';
+      }
+      if (scale !== undefined) {
+        transformDefinition += ' scale(' + scale + ')';
+      }
+      this.element.style[Modernizr.prefixed('transform')] = transformDefinition;
     }
-    if (scale !== undefined) {
-      transformDefinition += ' scale(' + scale + ')';
-    }
-    this.element.style[Modernizr.prefixed('transform')] = transformDefinition;
   };
 
   this.setZ = function(z) {
-    this.element.style[Modernizr.prefixed('zIndex')] = z;
+    if (z !== this.z) {
+      this.z = z;
+      this.element.style[Modernizr.prefixed('zIndex')] = z;
+    }
   };
 
   this.show = function() {

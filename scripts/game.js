@@ -85,7 +85,7 @@ function Game() {
       this.stock[stockIndex].updateLayout(
         (app.screenWidth * app.handsCenteredOn) - 100 - (app.cardWidth / 2),
         app.stockY,
-        0//Math.random() * 2 - 1
+        0
       );
     }
   };
