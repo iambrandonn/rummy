@@ -82,17 +82,22 @@ function Hand(cards, computer) {
   this.layDownMelds = function() {
     var setLayedDown = this.layDownSets();
     var runLayedDown = this.layDownRuns();
-    var additions = this.layDownAdditions();
+    var additions = false;
+    while (this.layDownAdditions()) {
+      additions = true;
+    }
 
     return setLayedDown || runLayedDown || additions;
   };
 
   this.layDownAdditions = function() {
+    var result = false;
+
     var isSetMeld = function(meld) {
       return meld[0].numericRank === meld[1].numericRank;
     };
 
-    for (var cardIndex in this.cards) {
+    for (var cardIndex = 0; cardIndex < this.cards.length; cardIndex++) {
       for (var meldIndex in app.game.melds) {
         var card = this.cards[cardIndex];
         var meld = app.game.melds[meldIndex];
@@ -119,10 +124,14 @@ function Hand(cards, computer) {
 
         if (removed) {
           this.cards.splice(cardIndex, 1);
-          continue;
+          cardIndex--;
+          result = true;
+          break;
         }
       }
     }
+
+    return result;
   };
 
   this.getSetLength = function(startIndex) {

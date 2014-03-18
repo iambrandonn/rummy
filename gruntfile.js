@@ -27,6 +27,9 @@ module.exports = function(grunt) {
         compress: false,
         mangle: false,
         beautify: true
+        // compress: true,
+        // mangle: true,
+        // beautify: false
       },
       dist: {
         files: {

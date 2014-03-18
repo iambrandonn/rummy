@@ -1,11 +1,7 @@
-/* global Deck, app, Player, Hand, states */
+/* global Deck, app, Hand, states */
 /* exported Game */
 
 function Game() {
-  this.players = [
-    new Player(false),
-    new Player(true)
-  ];
   this.deck = new Deck();
   this.discards = [];
   this.stock = [];
@@ -18,11 +14,12 @@ function Game() {
     setTimeout(function() {
       that.computerTurn = !that.computerTurn;
       if (that.computerTurn) {
-        that.players[1].autoPlay();
+        app.players[1].autoPlay();
       }
     }, app.animationTime);
   };
 
+  // Call this to update the display
   this.layout = function() {
     if (this.melds.length > 0) {
       this.centerHandsOn(0.65);
@@ -31,45 +28,56 @@ function Game() {
       this.centerHandsOn(0.5);
     }
     this.layoutMelds();
-
     this.layoutStock();
     this.layoutDiscards();
-
-    this.players[0].hand.layout();
-    this.players[1].hand.layout();
+    app.players[0].hand.layout();
+    app.players[1].hand.layout();
   };
 
+  // This will change where the players hands are centered around.
   this.centerHandsOn = function(percent) {
     app.handsCenteredOn = percent;
   };
 
   this.deal = function() {
+    // To begin, every card from the deck is in the stock
     this.stock = this.deck.cards.slice(0);
-    this.players[0].hand = new Hand(this.stock.splice(0, 10), false);
-    this.players[0].hand.order();
-    this.players[1].hand = new Hand(this.stock.splice(0, 10), true);
-    this.players[1].hand.order();
 
+    // Each player gets 10 cards in their hand
+    app.players[0].hand = new Hand(this.stock.splice(0, 10), false);
+    app.players[0].hand.order();
+    app.players[1].hand = new Hand(this.stock.splice(0, 10), true);
+    app.players[1].hand.order();
+
+    // Update the display according to the deal
     this.layout();
 
     // Wait for initial layout to finish
     setTimeout(function() {
       // Put the first card into the discard pile
       app.game.discards.push(app.game.stock.pop());
+
+      // Just render the discards
       app.game.layoutDiscards();
 
+      // Wait for the card to be moved onto the discard pile
       setTimeout(function() {
         // Turn over the card
         app.game.discards[0].show();
 
-        if (app.computerGoesFirst) {
-          app.game.players[1].autoPlay();
-        }
-        else {
-          app.game.state = states.DRAW;
-        }
-      }, app.animationTime);
-    }, app.animationTime);
+        // Start the game
+        app.game.start();
+      }, app.animationTime + 50);
+    }, app.animationTime + 50);
+  };
+
+  this.start = function() {
+    if (app.computerGoesFirst) {
+      app.players[1].autoPlay();
+    }
+    else {
+      this.state = states.DRAW;
+    }
   };
 
   this.playerDraw = function(card) {
@@ -83,10 +91,10 @@ function Game() {
 
     app.game.state = null;
     if (card === app.game.discards[app.game.discards.length - 1]) {
-      app.game.drawFromDiscards(app.game.players[playerIndex]);
+      app.game.drawFromDiscards(app.players[playerIndex]);
     }
     else if (card === app.game.stock[app.game.stock.length - 1]) {
-      app.game.drawFromStock(app.game.players[playerIndex]);
+      app.game.drawFromStock(app.players[playerIndex]);
     }
     else {
       app.game.state = states.DRAW;
@@ -96,7 +104,7 @@ function Game() {
     app.game.layout();
 
     setTimeout(function() {
-      app.game.players[playerIndex].hand.layDownMelds();
+      app.players[playerIndex].hand.layDownMelds();
       app.game.layout();
 
       app.game.state = states.DISCARD;
