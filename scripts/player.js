@@ -1,4 +1,4 @@
-/* globals app */
+/* globals app, states */
 /* exported Player */
 
 function Player(isComputer) {
@@ -13,7 +13,7 @@ function Player(isComputer) {
 
     setTimeout(function() {
       console.error('logic here to figure out AI of when to draw from which pile');
-      app.game.playerDraw(app.game.stock[app.game.stock.length - 1]);
+      that.draw(app.game.stock[app.game.stock.length - 1]);
 
       setTimeout(function() {
         console.error('logic here to figure out AI of which card to discard');
@@ -24,4 +24,45 @@ function Player(isComputer) {
       }, app.animationTime);
     }, delay);
   };
+
+  this.draw = function(card) {
+    var that = this;
+
+    app.game.state = null;
+    if (card === app.game.discards[app.game.discards.length - 1]) {
+      this.drawFromDiscards();
+    }
+    else if (card === app.game.stock[app.game.stock.length - 1]) {
+      this.drawFromStock();
+    }
+    else {
+      app.game.state = states.DRAW;
+      return;
+    }
+
+    app.game.layout();
+
+    setTimeout(function() {
+      that.hand.layDownMelds();
+      app.game.layout();
+      app.game.state = states.DISCARD;
+    }, app.animationTime);
+  };
+
+  this.drawFromStock = function() {
+    if (app.game.stock.length > 0) {
+      var card = app.game.stock.pop();
+      this.hand.addCard(card);
+      card.log();
+    }
+  };
+
+  this.drawFromDiscards = function() {
+    if (app.game.discards.length > 0) {
+      var card = app.game.discards.pop();
+      this.hand.addCard(card);
+      card.log();
+    }
+  };
+
 }

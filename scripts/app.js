@@ -81,7 +81,7 @@ var app = {
         // Depending on what we are waiting for, react appropriately
         switch (app.game.state) {
           case states.DRAW:
-            app.game.playerDraw(e.card);
+            app.players[0].draw(e.card);
             break;
           case states.DISCARD:
             app.players[0].hand.playerDiscard(e.card);

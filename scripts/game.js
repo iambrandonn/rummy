@@ -80,53 +80,6 @@ function Game() {
     }
   };
 
-  this.playerDraw = function(card) {
-    var playerIndex;
-    if (this.computerTurn) {
-      playerIndex = 1;
-    }
-    else {
-      playerIndex = 0;
-    }
-
-    app.game.state = null;
-    if (card === app.game.discards[app.game.discards.length - 1]) {
-      app.game.drawFromDiscards(app.players[playerIndex]);
-    }
-    else if (card === app.game.stock[app.game.stock.length - 1]) {
-      app.game.drawFromStock(app.players[playerIndex]);
-    }
-    else {
-      app.game.state = states.DRAW;
-      return;
-    }
-
-    app.game.layout();
-
-    setTimeout(function() {
-      app.players[playerIndex].hand.layDownMelds();
-      app.game.layout();
-
-      app.game.state = states.DISCARD;
-    }, app.animationTime);
-  };
-
-  this.drawFromStock = function(player) {
-    if (this.stock.length > 0) {
-      var card = this.stock.pop();
-      player.hand.addCard(card);
-      card.log();
-    }
-  };
-
-  this.drawFromDiscards = function(player) {
-    if (this.discards.length > 0) {
-      var card = this.discards.pop();
-      player.hand.addCard(card);
-      card.log();
-    }
-  };
-
   this.layoutStock = function() {
     for (var stockIndex = 0; stockIndex < this.stock.length; stockIndex++) {
       this.stock[stockIndex].updateLayout(
