@@ -17,6 +17,7 @@ function Card(newSuit, newValue) {
   this.element.classList.add(this.suit);
 
   this.element.addEventListener('click', function() {
+    console.log('h');
     var cardClickedEvent = document.createEvent('UIEvents');
     cardClickedEvent.initEvent('cardClicked', true, true);
     cardClickedEvent.card = this.card;

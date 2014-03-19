@@ -23,17 +23,18 @@ module.exports = function(grunt) {
     },
     uglify: {
       options: {
-        sourceMap: true,
-        compress: false,
-        mangle: false,
-        beautify: true
-        // compress: true,
-        // mangle: true,
-        // beautify: false
+        // sourceMap: true,
+        // compress: false,
+        // mangle: false,
+        // beautify: true
+        compress: true,
+        mangle: true,
+        beautify: false
       },
       dist: {
         files: {
           'build/app.js': [
+            'scripts/fastclick.js',
             'scripts/modernizr.js',
             'scripts/resizeend.js',
             'scripts/states.js',

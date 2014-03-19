@@ -12,9 +12,9 @@ body {
   z-index: 2;
   border: 1px solid #999;
   border-radius: 10px;
-  transition: -webkit-transform .6s ease-in-out;
-  transition: -ms-transform .6s ease-in-out;
-  transition: transform .6s ease-in-out;
+  transition: -webkit-transform .6s ease-out;
+  transition: -ms-transform .6s ease-out;
+  transition: transform .6s ease-out;
   transform: translateX(0px) translateY(0px) rotateZ(0deg);
 }
 
