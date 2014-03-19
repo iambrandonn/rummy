@@ -35,9 +35,7 @@ function Player(isComputer) {
       }
 
       setTimeout(function() {
-        console.error('logic here to figure out AI of which card to discard');
-
-        that.discard(that.hand.cards[0]);
+        that.discard(that.hand.chooseDiscard());
 
         app.game.layout();
       }, app.animationTime);

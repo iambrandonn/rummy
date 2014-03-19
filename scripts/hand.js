@@ -177,6 +177,51 @@ function Hand(cards, computer) {
     return result;
   };
 
+  this.getPotentialRuns = function(index) {
+    var result = [index];
+    var theCard = this.cards[index];
+
+    var downward = this.indexOf(theCard.suit, theCard.numericRank - 1);
+    var upward = this.indexOf(theCard.suit, theCard.numericRank + 1);
+    if (downward >= 0) {
+      result.unshift(downward);
+    }
+    if (upward >= 0) {
+      result.push(upward);
+    }
+
+    return result;
+  };
+
+  this.getPotentialSets = function(index) {
+    var result = [];
+    var theCard = this.cards[index];
+
+    for (var i = 0; i < this.cards.length; i++) {
+      if (this.cards[i].numericRank === theCard.numericRank) {
+        result.push(i);
+      }
+    }
+
+    return result;
+  };
+
+  this.getPotentialNonContRuns = function(index) {
+    var result = [index];
+    var theCard = this.cards[index];
+
+    var downward = this.indexOf(theCard.suit, theCard.numericRank - 2);
+    var upward = this.indexOf(theCard.suit, theCard.numericRank + 2);
+    if (downward >= 0) {
+      result.unshift(downward);
+    }
+    if (upward >= 0) {
+      result.push(upward);
+    }
+
+    return result;
+  };
+
   this.layDownSets = function() {
     var result = false;
 
@@ -245,5 +290,113 @@ function Hand(cards, computer) {
     var result = fakeHand.layDownMelds();
     fakeHand = null;
     return result;
+  };
+
+  this.getWorth = function(index) {
+    var lookingFor = [];
+    var worth = 0;
+    var candidates = 0;
+    var theCard = this.cards[index];
+
+    var updateCandidateBasedOnUsed = function(candidates, cardsLookingFor) {
+      var newCandidates = candidates;
+      var lookingIndex;
+      var discardCard, meldCard;
+
+      // Look for unavailable cards of same numericRank
+      for (var discardIndex in app.game.discards) {
+        discardCard = app.game.discards[discardIndex];
+        for (lookingIndex in cardsLookingFor) {
+          if (
+            discardCard.numericRank === cardsLookingFor[lookingIndex].numericRank &&
+            discardCard.suit === cardsLookingFor[lookingIndex].suit
+          ) {
+            newCandidates--;
+          }
+        }
+      }
+
+      // Look for unavailable cards of same numericRank
+      for (var meldIndex in app.game.melds) {
+        for (var cardIndex in app.game.melds[meldIndex]) {
+          meldCard = app.game.melds[meldIndex][cardIndex];
+          for (lookingIndex in cardsLookingFor) {
+            if (
+              meldCard.numericRank === cardsLookingFor[lookingIndex].numericRank &&
+              meldCard.suit === cardsLookingFor[lookingIndex].suit
+            ) {
+              newCandidates--;
+            }
+          }
+        }
+      }
+
+      return newCandidates;
+    };
+
+    var setCards = this.getPotentialSets(index);
+    var runCards = this.getPotentialRuns(index);
+    var ncRunCards = this.getPotentialNonContRuns(index);
+
+    if (setCards.length > 1) {
+      candidates += 2;
+
+      // Look for unavailable cards of same numericRank
+      lookingFor.concat([
+        {suit: 'heart', numericRank: theCard.numericRank},
+        {suit: 'diamond', numericRank: theCard.numericRank},
+        {suit: 'spade', numericRank: theCard.numericRank},
+        {suit: 'club', numericRank: theCard.numericRank}
+      ]);
+    }
+    if (runCards.length > 1) {
+      candidates += 2;
+
+      // Look for unavailable cards at either end of run
+      lookingFor.concat([
+        {
+          suit: this.cards[runCards[0]].suit,
+          numericRank: this.cards[runCards[0]].numericRank - 1
+        },
+        {
+          suit: this.cards[runCards[0]].suit,
+          numericRank: this.cards[runCards[runCards.length - 1]].numericRank + 1
+        }
+      ]);
+    }
+    if (ncRunCards.length > 1) {
+      candidates += 1;
+      lookingFor.concat([
+        {
+          suit: this.cards[ncRunCards[0]].suit,
+          numericRank: this.cards[ncRunCards[0]].numericRank + 1
+        }
+      ]);
+    }
+    candidates = updateCandidateBasedOnUsed(candidates, lookingFor);
+    worth = candidates / 52;
+
+    return worth;
+  };
+
+  this.chooseDiscard = function() {
+    var lowestWorth = Number.MAX_VALUE;
+    var leastValueableIndex = this.cards.length - 1;
+    for (var cardIndex = this.cards.length - 1; cardIndex >= 0; cardIndex--) {
+      var thisWorth = this.getWorth(cardIndex);
+
+      // short circuit on first card with a worth of 0
+      if (thisWorth === 0) {
+        return this.cards[cardIndex];
+      }
+
+      // Otherwise see if there has been a card worth less
+      if (thisWorth < lowestWorth) {
+        lowestWorth = thisWorth;
+        leastValueableIndex = cardIndex;
+      }
+    }
+
+    return this.cards[leastValueableIndex];
   };
 }

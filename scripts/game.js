@@ -106,8 +106,20 @@ function Game() {
     var yDistance = (app.screenHeight - 30) / this.melds.length;
     var currentMeldY = 15;
     var zIndex = 10;
-    var cardScale = this.melds.length > 3 ? 0.7 : 0.9;
-    var cardOffset = this.melds.length > 3 ? 42 : 10;
+    var cardScale;
+    var cardOffset;
+    if (this.melds.length < 4) {
+      cardScale = 0.9;
+      cardOffset = 10;
+    }
+    else if (this.melds.length < 6) {
+      cardScale = 0.7;
+      cardOffset = 42;
+    }
+    else {
+      cardScale = 0.62;
+      cardOffset = 45;
+    }
 
     for (var meldIndex in this.melds) {
       var currentCardX = 40;
