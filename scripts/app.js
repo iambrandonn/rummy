@@ -94,6 +94,9 @@ var app = {
     // Set up fastclick for mobile devices
     window.addEventListener('load', function() {
       FastClick.attach(document.body);
+      document.ontouchmove = function(e){
+        e.preventDefault();
+      };
     }, false);
   }
 };

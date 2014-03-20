@@ -112,13 +112,17 @@ function Game() {
       cardScale = 0.9;
       cardOffset = 10;
     }
-    else if (this.melds.length < 6) {
+    else if (this.melds.length < 5) {
       cardScale = 0.7;
-      cardOffset = 42;
+      cardOffset = 40;
+    }
+    else if (this.melds.length < 6) {
+      cardScale = 0.6;
+      cardOffset = 53;
     }
     else {
-      cardScale = 0.62;
-      cardOffset = 45;
+      cardScale = 0.5;
+      cardOffset = 60;
     }
 
     for (var meldIndex in this.melds) {
