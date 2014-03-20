@@ -19,76 +19,215 @@ body {
 }
 
 .hidden {
-  background-position-x: -1862px !important;
-  background-position-y: -1px !important;  
+  background-position: -1862px -1px !important;  
 }
 
-.spade {
-  background-position-y: -401px;
+._A.spade {
+  background-position: 1px -401px;
 }
 
-.heart {
-  background-position-y: -200px;
+._2.spade {
+  background-position: -144px -401px;
 }
 
-.diamond {
-  background-position-y: -601px;
+._3.spade {
+  background-position: -286px -401px;
 }
 
-.club {  
-  background-position-y: 0px;
+._4.spade {
+  background-position: -430px -401px;
 }
 
-._A {
-  background-position-x: 1px;
+._5.spade {
+  background-position: -573px -401px;
 }
 
-._2 {
-  background-position-x: -144px;
+._6.spade {
+  background-position: -715px -401px;
 }
 
-._3 {
-  background-position-x: -286px;
+._7.spade {
+  background-position: -859px -401px;
 }
 
-._4 {
-  background-position-x: -430px;
+._8.spade {
+  background-position: -1001px -401px;
 }
 
-._5 {
-  background-position-x: -573px;
+._9.spade {
+  background-position: -1145px -401px;
 }
 
-._6 {
-  background-position-x: -715px;
+._10.spade {
+  background-position: -1288px -401px;
 }
 
-._7 {
-  background-position-x: -859px;
+._J.spade {
+  background-position: -1431px -401px;
 }
 
-._8 {
-  background-position-x: -1001px;
+._Q.spade {
+  background-position: -1574px -401px;
 }
 
-._9 {
-  background-position-x: -1145px;
+._K.spade {
+  background-position: -1718px -401px;
 }
 
-._10 {
-  background-position-x: -1288px;
+._A.heart {
+  background-position: 1px -200px;
 }
 
-._J {
-  background-position-x: -1431px;
+._2.heart {
+  background-position: -144px -200px;
 }
 
-._Q {
-  background-position-x: -1574px;
+._3.heart {
+  background-position: -286px -200px;
 }
 
-._K {
-  background-position-x: -1718px;
+._4.heart {
+  background-position: -430px -200px;
+}
+
+._5.heart {
+  background-position: -573px -200px;
+}
+
+._6.heart {
+  background-position: -715px -200px;
+}
+
+._7.heart {
+  background-position: -859px -200px;
+}
+
+._8.heart {
+  background-position: -1001px -200px;
+}
+
+._9.heart {
+  background-position: -1145px -200px;
+}
+
+._1.heart0 {
+  background-position: -1288px -200px;
+}
+
+._J.heart {
+  background-position: -1431px -200px;
+}
+
+._Q.heart {
+  background-position: -1574px -200px;
+}
+
+._K.heart {
+  background-position: -1718px -200px;
+}
+
+._A.diamond {
+  background-position: 1px -601px;
+}
+
+._2.diamond {
+  background-position: -144px -601px;
+}
+
+._3.diamond {
+  background-position: -286px -601px;
+}
+
+._4.diamond {
+  background-position: -430px -601px;
+}
+
+._5.diamond {
+  background-position: -573px -601px;
+}
+
+._6.diamond {
+  background-position: -715px -601px;
+}
+
+._7.diamond {
+  background-position: -859px -601px;
+}
+
+._8.diamond {
+  background-position: -1001px -601px;
+}
+
+._9.diamond {
+  background-position: -1145px -601px;
+}
+
+._10.diamond {
+  background-position: -1288px -601px;
+}
+
+._J.diamond {
+  background-position: -1431px -601px;
+}
+
+._Q.diamond {
+  background-position: -1574px -601px;
+}
+
+._K.diamond {
+  background-position: -1718px -601px;
+}
+
+._A.club {
+  background-position: 1px 0px;
+}
+
+._2.club {
+  background-position: -144px 0px;
+}
+
+._3.club {
+  background-position: -286px 0px;
+}
+
+._4.club {
+  background-position: -430px 0px;
+}
+
+._5.club {
+  background-position: -573px 0px;
+}
+
+._6.club {
+  background-position: -715px 0px;
+}
+
+._7.club {
+  background-position: -859px 0px;
+}
+
+._8.club {
+  background-position: -1001px 0px;
+}
+
+._9.club {
+  background-position: -1145px 0px;
+}
+
+._1.club0 {
+  background-position: -1288px 0px;
+}
+
+._J.club {
+  background-position: -1431px 0px;
+}
+
+._Q.club {
+  background-position: -1574px 0px;
+}
+
+._K.club {
+  background-position: -1718px 0px;
 }
 
 .playerHand {
