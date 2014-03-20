@@ -6,6 +6,7 @@ body {
 
 .card {
   background-image:url('../cards.png');
+  background-size: 2004px 800px;
   width: 142px;
   height: 199px;
   position: absolute;
