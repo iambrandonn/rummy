@@ -1,4 +1,4 @@
-/* global Game, states, Player */
+/* global Game, states, Player, FastClick */
  
 var app = {
   computerGoesFirst: false,
@@ -90,6 +90,11 @@ var app = {
         }
       }
     });
+
+    // Set up fastclick for mobile devices
+    window.addEventListener('load', function() {
+      FastClick.attach(document.body);
+    }, false);
   }
 };
 

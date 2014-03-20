@@ -7,11 +7,11 @@ body {
 .card {
   background-image:url('../cards.png');
   background-size: 2004px 800px;
-  width: 142px;
-  height: 199px;
+  width: 141px;
+  height: 198px;
   position: absolute;
   z-index: 2;
-  border: 1px solid #999;
+  border: 1px solid #333;
   border-radius: 10px;
   transition: -webkit-transform .6s ease-out;
   transition: -ms-transform .6s ease-out;
@@ -24,7 +24,7 @@ body {
 }
 
 ._A.spade {
-  background-position: 1px -401px;
+  background-position: -1px -401px;
 }
 
 ._2.spade {
@@ -32,7 +32,7 @@ body {
 }
 
 ._3.spade {
-  background-position: -286px -401px;
+  background-position: -287px -401px;
 }
 
 ._4.spade {
@@ -40,7 +40,7 @@ body {
 }
 
 ._5.spade {
-  background-position: -573px -401px;
+  background-position: -572px -401px;
 }
 
 ._6.spade {
@@ -48,7 +48,7 @@ body {
 }
 
 ._7.spade {
-  background-position: -859px -401px;
+  background-position: -858px -401px;
 }
 
 ._8.spade {
@@ -56,79 +56,79 @@ body {
 }
 
 ._9.spade {
-  background-position: -1145px -401px;
+  background-position: -1143px -401px;
 }
 
 ._10.spade {
-  background-position: -1288px -401px;
+  background-position: -1286px -401px;
 }
 
 ._J.spade {
-  background-position: -1431px -401px;
+  background-position: -1429px -401px;
 }
 
 ._Q.spade {
-  background-position: -1574px -401px;
+  background-position: -1573px -401px;
 }
 
 ._K.spade {
-  background-position: -1718px -401px;
+  background-position: -1716px -401px;
 }
 
 ._A.heart {
-  background-position: 1px -200px;
+  background-position: -1px -201px;
 }
 
 ._2.heart {
-  background-position: -144px -200px;
+  background-position: -144px -201px;
 }
 
 ._3.heart {
-  background-position: -286px -200px;
+  background-position: -287px -201px;
 }
 
 ._4.heart {
-  background-position: -430px -200px;
+  background-position: -430px -201px;
 }
 
 ._5.heart {
-  background-position: -573px -200px;
+  background-position: -572px -201px;
 }
 
 ._6.heart {
-  background-position: -715px -200px;
+  background-position: -715px -201px;
 }
 
 ._7.heart {
-  background-position: -859px -200px;
+  background-position: -858px -201px;
 }
 
 ._8.heart {
-  background-position: -1001px -200px;
+  background-position: -1001px -201px;
 }
 
 ._9.heart {
-  background-position: -1145px -200px;
+  background-position: -1143px -201px;
 }
 
-._1.heart0 {
-  background-position: -1288px -200px;
+._10.heart {
+  background-position: -1286px -201px;
 }
 
 ._J.heart {
-  background-position: -1431px -200px;
+  background-position: -1429px -201px;
 }
 
 ._Q.heart {
-  background-position: -1574px -200px;
+  background-position: -1573px -201px;
 }
 
 ._K.heart {
-  background-position: -1718px -200px;
+  background-position: -1716px -201px;
 }
 
 ._A.diamond {
-  background-position: 1px -601px;
+  background-position: -1px -601px;
 }
 
 ._2.diamond {
@@ -136,7 +136,7 @@ body {
 }
 
 ._3.diamond {
-  background-position: -286px -601px;
+  background-position: -287px -601px;
 }
 
 ._4.diamond {
@@ -144,7 +144,7 @@ body {
 }
 
 ._5.diamond {
-  background-position: -573px -601px;
+  background-position: -572px -601px;
 }
 
 ._6.diamond {
@@ -152,7 +152,7 @@ body {
 }
 
 ._7.diamond {
-  background-position: -859px -601px;
+  background-position: -858px -601px;
 }
 
 ._8.diamond {
@@ -160,75 +160,75 @@ body {
 }
 
 ._9.diamond {
-  background-position: -1145px -601px;
+  background-position: -1143px -601px;
 }
 
 ._10.diamond {
-  background-position: -1288px -601px;
+  background-position: -1286px -601px;
 }
 
 ._J.diamond {
-  background-position: -1431px -601px;
+  background-position: -1429px -601px;
 }
 
 ._Q.diamond {
-  background-position: -1574px -601px;
+  background-position: -1573px -601px;
 }
 
 ._K.diamond {
-  background-position: -1718px -601px;
+  background-position: -1716px -601px;
 }
 
 ._A.club {
-  background-position: 1px 0px;
+  background-position: -1px -1px;
 }
 
 ._2.club {
-  background-position: -144px 0px;
+  background-position: -144px -1px;
 }
 
 ._3.club {
-  background-position: -286px 0px;
+  background-position: -287px -1px;
 }
 
 ._4.club {
-  background-position: -430px 0px;
+  background-position: -430px -1px;
 }
 
 ._5.club {
-  background-position: -573px 0px;
+  background-position: -572px -1px;
 }
 
 ._6.club {
-  background-position: -715px 0px;
+  background-position: -715px -1px;
 }
 
 ._7.club {
-  background-position: -859px 0px;
+  background-position: -858px -1px;
 }
 
 ._8.club {
-  background-position: -1001px 0px;
+  background-position: -1001px -1px;
 }
 
 ._9.club {
-  background-position: -1145px 0px;
+  background-position: -1143px -1px;
 }
 
-._1.club0 {
-  background-position: -1288px 0px;
+._10.club {
+  background-position: -1286px -1px;
 }
 
 ._J.club {
-  background-position: -1431px 0px;
+  background-position: -1429px -1px;
 }
 
 ._Q.club {
-  background-position: -1574px 0px;
+  background-position: -1573px -1px;
 }
 
 ._K.club {
-  background-position: -1718px 0px;
+  background-position: -1716px -1px;
 }
 
 .playerHand {
