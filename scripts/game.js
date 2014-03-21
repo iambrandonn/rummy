@@ -22,7 +22,7 @@ function Game() {
   // Call this to update the display
   this.layout = function() {
     if (this.melds.length > 0) {
-      this.centerHandsOn(0.65);
+      this.centerHandsOn(0.56);
     }
     else {
       this.centerHandsOn(0.5);

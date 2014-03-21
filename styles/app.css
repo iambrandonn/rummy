@@ -1,3 +1,11 @@
+.ad {
+  background-color: #000;
+  position: absolute;
+  top: 50%;
+  right: 2%;
+  margin-top: -300px;
+}
+
 body {
   background-color: white;
   margin: 0;
