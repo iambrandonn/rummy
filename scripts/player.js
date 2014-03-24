@@ -63,7 +63,13 @@ function Player(isComputer) {
     setTimeout(function() {
       that.hand.layDownMelds();
       app.game.layout();
-      app.game.state = states.DISCARD;
+      if (that.hand.cards.length === 0) {
+        app.game.state = null;
+        app.game.toggleTurn();
+      }
+      else {
+        app.game.state = states.DISCARD;
+      }
     }, app.animationTime);
   };
 

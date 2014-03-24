@@ -287,6 +287,10 @@ body {
   z-index: 3;
 }
 
+.recentered {
+  left: 56% !important;
+}
+
 .computerScore {
   top: 7px;
 }
@@ -301,7 +305,8 @@ body {
 
 .tip {
   font-style: italic;
-  font-size: 16px;
+  font-size: 17px;
+  font-weight: normal;
 }
 
 .continueModal > .tip {

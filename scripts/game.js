@@ -30,6 +30,8 @@ function Game() {
 
   this.nextHand = function() {
     app.opponentY -= 125;
+    app.computerGoesFirst = !app.computerGoesFirst;
+
     for (var cardIndex in this.deck.cards) {
       this.deck.cards[cardIndex].element.classList.remove('meld');
       this.deck.cards[cardIndex].hide();
@@ -67,11 +69,22 @@ function Game() {
 
   // Call this to update the display
   this.layout = function() {
+    var scores;
     if (this.melds.length > 0) {
-      this.centerHandsOn(0.56);
+      if (app.handsCenteredOn !== 0.56) {
+        this.centerHandsOn(0.56);
+        scores = document.querySelectorAll('.computerScore, .playerScore');
+        scores[0].classList.add('recentered');
+        scores[1].classList.add('recentered');
+      }
     }
     else {
-      this.centerHandsOn(0.5);
+      if (app.handsCenteredOn !== 0.5) {
+        this.centerHandsOn(0.5);
+        scores = document.querySelectorAll('.computerScore, .playerScore');
+        scores[0].classList.remove('recentered');
+        scores[1].classList.remove('recentered');
+      }
     }
     this.layoutMelds();
     this.layoutStock();
@@ -127,12 +140,14 @@ function Game() {
   };
 
   this.layoutStock = function() {
+    var zIndex = 10;
     for (var stockIndex = 0; stockIndex < this.stock.length; stockIndex++) {
       this.stock[stockIndex].updateLayout(
         (app.screenWidth * app.handsCenteredOn) - 100 - (app.cardWidth / 2),
         app.stockY,
         0
       );
+      app.game.stock[stockIndex].setZ(zIndex++);
     }
   };
 

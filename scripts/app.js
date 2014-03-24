@@ -12,7 +12,6 @@ var app = {
   playerY: null,
   opponentY: null,
   opponentScore: null,
-  computerTurn: false,
   animationTime: 600,
   players: [
     new Player(false),
