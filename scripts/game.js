@@ -132,9 +132,11 @@ function Game() {
 
   this.start = function() {
     if (app.computerGoesFirst) {
+      this.computerTurn = true;
       app.players[1].autoPlay();
     }
     else {
+      this.computerTurn = false;
       this.state = states.DRAW;
     }
   };
