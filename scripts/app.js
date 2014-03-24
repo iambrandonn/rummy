@@ -1,4 +1,4 @@
-/* global Game, states, Player, FastClick */
+/* global Game, states, Player, FastClick, Modernizr */
  
 var app = {
   computerGoesFirst: false,
@@ -11,6 +11,7 @@ var app = {
   stockY: null,
   playerY: null,
   opponentY: null,
+  opponentScore: null,
   computerTurn: false,
   animationTime: 600,
   players: [
@@ -19,15 +20,10 @@ var app = {
   ],
   updateLayoutVariables: function() {
     app.screenWidth = window.innerWidth;
-    app.screenHeight = window.innerHeight;
+    app.screenHeight = document.documentElement.clientHeight;
 
     // Set PlayerY
-    if (app.screenHeight < 513) {
-      app.playerY = app.screenHeight - app.cardHeight + 30;
-    }
-    else {
-      app.playerY = app.screenHeight - app.cardHeight - 30;
-    }
+    app.playerY = app.screenHeight - app.cardHeight - 35;
 
     // Set OpponentY
     if (app.screenHeight < 506) {
@@ -39,6 +35,9 @@ var app = {
     else {
       app.opponentY = -100;
     }
+
+    // Opponent Score
+    document.querySelectorAll('.computerScore')[0].style.top = (app.opponentY + app.cardHeight + 10) + 'px';
     
     // Set StockY
     if (app.screenHeight < 506) {
@@ -59,16 +58,10 @@ var app = {
     else {
       app.stockY = 250;
     }
+
+    window.scroll(0, 500);
   },
   init: function() {
-    // Load the card images and then start the game
-    var cardImage = new Image();
-    cardImage.onload = function() {
-      app.updateLayoutVariables();
-      app.game.deal();
-    };
-    cardImage.src = 'cards.png';
-
     // When the browser resizes we need to update our layout
     window.addEventListener('resize:end', function() {
       app.updateLayoutVariables();
@@ -91,6 +84,12 @@ var app = {
       }
     });
 
+    var continueButton = document.querySelectorAll('.continueModal > .button')[0];
+    continueButton.addEventListener('click', function() {
+      app.hideContinueModal();
+      app.game.nextHand();
+    });
+
     // Set up fastclick for mobile devices
     window.addEventListener('load', function() {
       FastClick.attach(document.body);
@@ -98,7 +97,32 @@ var app = {
         e.preventDefault();
       };
     }, false);
+
+    app.updateLayoutVariables();
+    app.game.deal();
+  },
+
+  updateScoreDOM: function() {
+    document.querySelectorAll('.playerScore > .scoreValue')[0].textContent = app.players[0].score;
+    document.querySelectorAll('#continueYourScore')[0].textContent = app.players[0].score;
+    document.querySelectorAll('.computerScore > .scoreValue')[0].textContent = app.players[1].score;
+    document.querySelectorAll('#continueOpponentScore')[0].textContent = app.players[1].score;
+  },
+
+  showContinueModal: function() {
+    var modal = document.querySelectorAll('.continueModal')[0];
+    modal.style[Modernizr.prefixed('transform')] = 'translateX(81%)';
+  },
+
+  hideContinueModal: function() {
+    var modal = document.querySelectorAll('.continueModal')[0];
+    modal.style[Modernizr.prefixed('transform')] = 'translateX(-100%)';
   }
 };
 
-app.init();
+var readyStateCheckInterval = setInterval(function() {
+  if (document.readyState === 'complete') {
+    clearInterval(readyStateCheckInterval);
+    app.init();
+  }
+}, 20);

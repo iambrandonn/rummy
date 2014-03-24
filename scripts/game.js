@@ -9,12 +9,58 @@ function Game() {
   this.computerTurn = false;
   this.state = null;
 
+  this.finishHand = function() {
+    // update scores
+    if (app.players[0].hand.cards.length === 0) {
+      app.players[1].score += app.players[1].hand.getScore();
+    }
+    else if (app.players[1].hand.cards.length === 0) {
+      app.players[0].score += app.players[0].hand.getScore();
+    }
+    app.updateScoreDOM();
+
+    // Show computers hand if any cards left
+    app.opponentY += 125;
+    app.game.layout();
+    app.players[1].hand.show();
+
+    // Show continue
+    app.showContinueModal();
+  };
+
+  this.nextHand = function() {
+    app.opponentY -= 125;
+    for (var cardIndex in this.deck.cards) {
+      this.deck.cards[cardIndex].element.classList.remove('meld');
+      this.deck.cards[cardIndex].hide();
+    }
+    this.discards = [];
+    this.melds = [];
+    app.players[0].hand.empty();
+    app.players[1].hand.empty();
+    this.stock = this.deck.cards.slice(0);
+
+    setTimeout(function() {
+      app.game.deal();
+    }, app.animationTime);
+
+    app.game.layout();
+    this.deck.shuffle();
+  };
+
   this.toggleTurn = function() {
     var that = this;
     setTimeout(function() {
       that.computerTurn = !that.computerTurn;
-      if (that.computerTurn) {
-        app.players[1].autoPlay();
+
+      // check for a winner
+      if (app.players[0].hand.cards.length === 0 || app.players[1].hand.cards.length === 0) {
+        that.finishHand();
+      }
+      else {
+        if (that.computerTurn) {
+          app.players[1].autoPlay();
+        }
       }
     }, app.animationTime);
   };

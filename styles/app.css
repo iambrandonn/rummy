@@ -18,7 +18,8 @@ body {
   height: 198px;
   position: absolute;
   z-index: 2;
-  border: 1px solid #333;
+  box-shadow: #4C4B4A -1px 1px 3px;
+  /*border: 1px solid #333;*/
   border-radius: 10px;
   transition: -webkit-transform .6s ease-out;
   transition: -ms-transform .6s ease-out;
@@ -277,21 +278,85 @@ body {
 
 .computerScore, .playerScore {
   position: absolute;
-  right: 20px;
+  left: 50%;
+  transform: translateX(-39px);
   color: yellow;
   font-size: 16px;
   font-weight: bold;
   font-family: Arial, sans-serif;
+  z-index: 3;
 }
 
 .computerScore {
-  top: 10px;
+  top: 7px;
 }
 
 .playerScore {
-  bottom: 10px;
+  bottom: 7px;
 }
 
 .scoreValue {
   color: white;
+}
+
+.tip {
+  font-style: italic;
+  font-size: 16px;
+}
+
+.continueModal > .tip {
+  padding-top: 20px;
+  text-align: center;
+}
+
+.continueModal {
+  background-color: #100;
+  position: absolute;
+  width: 38%;
+  padding: 28px;
+  top: 35%;
+  z-index: 9999;
+  transition: all .4s ease-out;
+  transform: translateX(-100%);
+  font-size: 40px;
+  font-family: Arial,sans-serif;
+  font-weight: 700;
+  color: #FFF;
+  box-sizing: border-box;
+}
+
+.scores {
+  display: table;
+  width: 100%;
+}
+
+.scores > .score {
+  display: table-row;
+}
+
+.score > .player, .score > .value {
+  display: table-cell;
+  width: 52px;
+}
+
+.score > .value {
+  text-align: right;
+}
+
+.score > .player {
+  padding-left: 18px;
+  padding-bottom: 6px;
+}
+
+.button {
+  background-color: #48DD00;
+  border: 0;
+  font-size: 30px;
+  border-radius: 13px;
+  color: #FFF;
+  text-shadow: #000 2px 2px;
+  padding: 4px 15px 8px 15px;
+  margin: 32px auto 5px auto;
+  display: block;
+  cursor: pointer;
 }

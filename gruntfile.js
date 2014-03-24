@@ -23,13 +23,13 @@ module.exports = function(grunt) {
     },
     uglify: {
       options: {
-        // sourceMap: true,
-        // compress: false,
-        // mangle: false,
-        // beautify: true
-        compress: true,
-        mangle: true,
-        beautify: false
+        sourceMap: true,
+        compress: false,
+        mangle: false,
+        beautify: true
+        // compress: true,
+        // mangle: true,
+        // beautify: false
       },
       dist: {
         files: {

@@ -6,6 +6,20 @@ function Hand(cards, computer) {
   this.isComputer = computer;
   this.isPretend = false; // When testing for valid melds, we create some pretend hands
 
+  this.getScore = function() {
+    var score = 0;
+    for (var cardIndex in this.cards) {
+      if (this.cards[cardIndex].numericRank > 9) {
+        score += 10;
+      }
+      else {
+        score += this.cards[cardIndex].numericRank;
+      }
+    }
+
+    return score;
+  };
+
   this.order = function() {
     // order by rank
     if (Array.isArray(this.cards)) {
@@ -398,5 +412,15 @@ function Hand(cards, computer) {
     }
 
     return this.cards[leastValueableIndex];
+  };
+
+  this.empty = function() {
+    this.cards = [];
+  };
+
+  this.show = function() {
+    for (var cardIndex in this.cards) {
+      this.cards[cardIndex].show();
+    }
   };
 }

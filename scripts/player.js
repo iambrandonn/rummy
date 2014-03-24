@@ -4,6 +4,7 @@
 function Player(isComputer) {
   this.hand = null;
   this.isComputer = isComputer;
+  this.score = 0;
 
   this.shouldChoose = function(cardShowing) {
     // If it will get you a meld, do it
