@@ -13,6 +13,10 @@ var app = {
   opponentY: null,
   opponentScore: null,
   animationTime: 600,
+  stockHintX: null,
+  stockHintY: null,
+  discardHintX: null,
+  discardHintY: null,
   players: [
     new Player(false),
     new Player(true)

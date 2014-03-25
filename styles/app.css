@@ -354,14 +354,32 @@ body {
 }
 
 .button {
-  background-color: #48DD00;
+  background: #48DD00;
+  -webkit-appearance: none;
   border: 0;
   font-size: 30px;
-  border-radius: 13px;
+  border-radius: 5px;
   color: #FFF;
   text-shadow: #000 2px 2px;
   padding: 4px 15px 8px 15px;
   margin: 32px auto 5px auto;
   display: block;
   cursor: pointer;
+}
+
+.arrow {
+  font-size: 65px;
+  color: #D3D3D3;
+  text-shadow: 0 0 33px #99F, 0 0 33px #99F, 0 0 33px #99F;
+  font-family: monospace;
+  position: absolute;
+  font-weight: bold;
+}
+
+.arrow.stock {
+  transform: rotateZ(248deg);
+}
+
+.arrow.discard {
+  transform: rotateZ(-68deg);
 }

@@ -91,6 +91,7 @@ function Game() {
     this.layoutDiscards();
     app.players[0].hand.layout();
     app.players[1].hand.layout();
+    this.layoutHintArrows();
   };
 
   // This will change where the players hands are centered around.
@@ -151,6 +152,19 @@ function Game() {
       );
       app.game.stock[stockIndex].setZ(zIndex++);
     }
+  };
+
+  this.layoutHintArrows = function() {
+    var stockElement = document.querySelectorAll('.arrow.stock')[0];
+    var discardElement = document.querySelectorAll('.arrow.discard')[0];
+
+    // Stock hint arrow
+    stockElement.style.top = app.stockY + 208 + 'px';
+    stockElement.style.left = (app.screenWidth * app.handsCenteredOn) - 85  + 'px';
+
+    // Discard hint arrow
+    discardElement.style.top = app.stockY + 208 + 'px';
+    discardElement.style.left = (app.screenWidth * app.handsCenteredOn) + 106 - (app.cardWidth / 3) + 'px';
   };
 
   this.layoutDiscards = function() {
