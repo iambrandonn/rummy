@@ -370,10 +370,13 @@ body {
 .arrow {
   font-size: 65px;
   color: #D3D3D3;
-  text-shadow: 0 0 33px #99F, 0 0 33px #99F, 0 0 33px #99F;
   font-family: monospace;
   position: absolute;
   font-weight: bold;
+  animation-name: pulse;
+  animation-duration: 3s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
 }
 
 .arrow.stock {
@@ -382,4 +385,13 @@ body {
 
 .arrow.discard {
   transform: rotateZ(-68deg);
+}
+
+@keyframes pulse {
+  from {
+    text-shadow: 0 0 33px #FFF,0 0 33px #FFF,0 0 33px #FFF;
+  }
+  to {
+    text-shadow: 0 0 33px #006, 0 0 33px #006, 0 0 33px #006;
+  }
 }
