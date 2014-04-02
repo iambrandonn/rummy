@@ -9,6 +9,10 @@ function Game() {
   this.computerTurn = false;
   this.state = null;
 
+  var stockArrow = document.querySelectorAll('.arrow.stock')[0];
+  var discardArrow = document.querySelectorAll('.arrow.discard')[0];
+  var stockArrowX, stockArrowY, discardArrowX, discardArrowY;
+
   this.finishHand = function() {
     // update scores
     if (app.players[0].hand.cards.length === 0) {
@@ -62,6 +66,10 @@ function Game() {
       else {
         if (that.computerTurn) {
           app.players[1].autoPlay();
+        }
+        else {
+          that.state = states.DRAW;
+          that.updateHintArrows();
         }
       }
     }, app.animationTime);
@@ -139,6 +147,7 @@ function Game() {
     else {
       this.computerTurn = false;
       this.state = states.DRAW;
+      this.updateHintArrows();
     }
   };
 
@@ -155,16 +164,50 @@ function Game() {
   };
 
   this.layoutHintArrows = function() {
-    var stockElement = document.querySelectorAll('.arrow.stock')[0];
-    var discardElement = document.querySelectorAll('.arrow.discard')[0];
-
     // Stock hint arrow
-    stockElement.style.top = app.stockY + 208 + 'px';
-    stockElement.style.left = (app.screenWidth * app.handsCenteredOn) - 85  + 'px';
+    var newX = (app.screenWidth * app.handsCenteredOn) - 95;
+    var newY = app.stockY + 220;
+
+    if (stockArrowX !== newX) {
+      stockArrow.style.left = newX  + 'px';
+      stockArrowX = newX;
+    }
+
+    if (stockArrowY !== newY) {
+      stockArrow.style.top = newY + 'px';
+      stockArrowY = newY;
+    }
 
     // Discard hint arrow
-    discardElement.style.top = app.stockY + 208 + 'px';
-    discardElement.style.left = (app.screenWidth * app.handsCenteredOn) + 106 - (app.cardWidth / 3) + 'px';
+    newX = (app.screenWidth * app.handsCenteredOn) + 90 - (app.cardWidth / 3);
+
+    if (discardArrowX !== newX) {
+      discardArrow.style.left = newX + 'px';
+      discardArrowX = newX;
+    }
+
+    if (discardArrowY !== newY) {
+      discardArrow.style.top = newY + 'px';
+      discardArrowY = newY;
+    }
+  };
+
+  this.updateHintArrows = function() {
+    if (app.game.state === states.DRAW) {
+      stockArrow.style.opacity = '1';
+      discardArrow.style.opacity = '1';
+      discardArrow.classList.remove('rotated');
+    }
+    else if (app.game.state === states.DISCARD) {
+      stockArrow.style.opacity = '0';
+      discardArrow.style.opacity = '1';
+      discardArrow.classList.add('rotated');
+    }
+    else {
+      stockArrow.style.opacity = '0';
+      discardArrow.style.opacity = '0';
+      discardArrow.classList.remove('rotated');
+    }
   };
 
   this.layoutDiscards = function() {

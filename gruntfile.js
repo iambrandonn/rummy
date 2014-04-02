@@ -57,7 +57,14 @@ module.exports = function(grunt) {
         files: ['styles/**/*.css'],
         tasks: ['myth', 'cssmin']
       }
-    }
+    },
+    copy: {
+      fonts: {
+        src: 'fonts/*',
+        dest: 'build/'
+      }
+    },
+    clean: ['build']
   });
 
   grunt.loadNpmTasks('grunt-simple-mocha');
@@ -65,6 +72,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-myth');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-clean');
 
-  grunt.registerTask('default', ['simplemocha', 'uglify', 'myth', 'cssmin']);
+  grunt.registerTask('default', ['simplemocha', 'clean', 'copy', 'uglify', 'myth', 'cssmin']);
 };

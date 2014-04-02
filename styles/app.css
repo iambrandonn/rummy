@@ -18,8 +18,8 @@ body {
   height: 198px;
   position: absolute;
   z-index: 2;
-  box-shadow: #4C4B4A -1px 1px 3px;
-  /*border: 1px solid #333;*/
+  /*box-shadow: #4C4B4A -1px 1px 3px;*/
+  border: 1px solid #333;
   border-radius: 10px;
   transition: -webkit-transform .6s ease-out;
   transition: -ms-transform .6s ease-out;
@@ -367,31 +367,66 @@ body {
   cursor: pointer;
 }
 
+@media (max-height: 700px) {
+  .arrow {
+    display: none;
+  }  
+}
+@media (max-height: 750px) {
+  .arrow {
+    font-size: 32px;
+  }
+}
+@media (min-height: 751px) {
+  .arrow {
+    font-size: 50px;
+  }
+}
+
 .arrow {
-  font-size: 65px;
   color: #D3D3D3;
-  font-family: monospace;
   position: absolute;
-  font-weight: bold;
-  animation-name: pulse;
-  animation-duration: 3s;
-  animation-direction: alternate;
-  animation-iteration-count: infinite;
+  text-shadow: 0 0 33px #FFF;
+  transition: all .3s ease-in-out;
 }
 
 .arrow.stock {
-  transform: rotateZ(248deg);
+  transform: rotateZ(105deg);
 }
 
 .arrow.discard {
-  transform: rotateZ(-68deg);
+  transform: rotateZ(165deg);
 }
 
-@keyframes pulse {
-  from {
-    text-shadow: 0 0 33px #FFF,0 0 33px #FFF,0 0 33px #FFF;
-  }
-  to {
-    text-shadow: 0 0 33px #006, 0 0 33px #006, 0 0 33px #006;
-  }
+.arrow.discard.rotated {
+  transform: rotateZ(-17deg);  
+}
+
+@font-face {
+  font-family: 'arrow';
+  src:url('fonts/arrow.eot?-2xnwb3');
+  src:url('fonts/arrow.eot?#iefix-2xnwb3') format('embedded-opentype'),
+    url('fonts/arrow.woff?-2xnwb3') format('woff'),
+    url('fonts/arrow.ttf?-2xnwb3') format('truetype'),
+    url('fonts/arrow.svg?-2xnwb3#arrow') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  font-family: 'arrow';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-arrow-up-right:before {
+  content: "\41";
 }

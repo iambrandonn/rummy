@@ -70,6 +70,7 @@ function Player(isComputer) {
       else {
         app.game.state = states.DISCARD;
       }
+      app.game.updateHintArrows();
     }, app.animationTime);
   };
 
@@ -103,7 +104,8 @@ function Player(isComputer) {
       this.hand.cards.splice(placeInHand, 1);
       app.game.discards.push(card);
       card.show();
-      app.game.state = states.DRAW;
+      app.game.state = null;
+      app.game.updateHintArrows();
       app.game.toggleTurn();
     }
     else {
