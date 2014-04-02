@@ -71,6 +71,18 @@ var app = {
       app.game.layout();
     }, false);
 
+    document.querySelectorAll('.arrow.stock')[0].addEventListener('click', function() {
+      if (app.game.stock.length > 0) {
+        app.game.stock[app.game.stock.length - 1].element.click();
+      }
+    });
+
+    document.querySelectorAll('.arrow.discard')[0].addEventListener('click', function() {
+      if (app.game.discards.length > 0) {
+        app.game.discards[app.game.discards.length - 1].element.click();
+      }
+    });
+
     document.addEventListener('cardClicked', function(e) {
       // Nothing should happend unless it is the players turn
       if (!app.game.computerTurn) {
