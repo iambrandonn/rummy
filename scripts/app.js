@@ -21,9 +21,26 @@ var app = {
     new Player(false),
     new Player(true)
   ],
+  orientationWarningShowing: false,
+  showOrientationWarning: function() {
+    document.querySelectorAll('.orientationWarning')[0].style.display = 'block';
+    document.querySelectorAll('.orientationWarning')[0].style['z-index'] = '20000';
+    app.orientationWarningShowing = true;
+  },
+  hideOrientationWarning: function() {
+    document.querySelectorAll('.orientationWarning')[0].style.display = 'none';
+    app.orientationWarningShowing = false;
+  },
   updateLayoutVariables: function() {
     app.screenWidth = window.innerWidth;
     app.screenHeight = document.documentElement.clientHeight;
+
+    if (app.screenHeight > app.screenWidth && !app.orientationWarningShowing) {
+      app.showOrientationWarning();
+    }
+    else if (app.orientationWarningShowing) {
+      app.hideOrientationWarning();
+    }
 
     // Set PlayerY
     app.playerY = app.screenHeight - app.cardHeight - 35;

@@ -45,7 +45,7 @@ function Card(newSuit, newValue) {
       this.rotation = rotation;
       this.scale = scale;
 
-      var transformDefinition = 'translateX(' + (x) + 'px) translateY(' + y + 'px) translateZ(1px)';
+      var transformDefinition = 'translateX(' + x + 'px) translateY(' + y + 'px) translateZ(1px)';
       if (rotation !== undefined) {
         transformDefinition += ' rotateZ(' + rotation + 'deg)';
       }

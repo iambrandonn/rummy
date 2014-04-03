@@ -18,7 +18,7 @@ body {
   height: 198px;
   position: absolute;
   z-index: 2;
-  /*box-shadow: #4C4B4A -1px 1px 3px;*/
+  box-shadow: #4C4B4A -1px 1px 3px;
   border: 1px solid #333;
   border-radius: 10px;
   transition: -webkit-transform .6s ease-out;
@@ -429,4 +429,24 @@ body {
 
 .icon-arrow-up-right:before {
   content: "\41";
+}
+
+.orientationWarning {
+  display: none;
+  background-color: #F00;
+  position: absolute;
+  width: 75%;
+  padding: 28px;
+  left: 0;
+  right: 0;
+  top: 20px;
+  z-index: 9999;
+  margin: auto;
+  box-sizing: border-box;
+  font-size: 40px;
+  font-family: Arial,sans-serif;
+  font-weight: 700;
+  color: #FFF;
+  text-align: center;
+  transform: translateZ(2px);
 }
