@@ -317,17 +317,35 @@ body {
 .continueModal {
   background-color: #100;
   position: absolute;
-  width: 38%;
-  padding: 28px;
-  top: 35%;
+  width: 50%;
+  left: 50%;
+  padding: 81px 28px 28px 28px;
+  top: 29%;
   z-index: 9999;
   transition: all .4s ease-out;
-  transform: translateX(-100%);
+  transform: translateX(-201%) translateZ(2px);
   font-size: 40px;
   font-family: Arial,sans-serif;
   font-weight: 700;
   color: #FFF;
   box-sizing: border-box;
+}
+
+.cumulativeScore {
+  font-size: 25px;
+  text-align: center;
+  font-weight: bold;
+  color: #000;
+  font-family: Tahoma, Verdana, Segoe, sans-serif;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 7px;
+  box-sizing: border-box;
+  background-color: #C6CCC3;
+  border-top: 2px solid #206200;
+  text-shadow: 2px 2px 9px #FFF;
 }
 
 .scores {
@@ -354,9 +372,9 @@ body {
 }
 
 .button {
-  background: #48DD00;
-  -webkit-appearance: none;
-  border: 0;
+  /*background: #48DD00;*/
+  /*-webkit-appearance: none;*/
+  /*border: 0;*/
   font-size: 30px;
   border-radius: 5px;
   color: #FFF;
@@ -365,6 +383,15 @@ body {
   margin: 32px auto 5px auto;
   display: block;
   cursor: pointer;
+
+  border:1px solid #36a500; 
+  text-decoration:none; 
+  background-color: #48DD00; background-image: -webkit-gradient(linear, left top, left bottom, from(#48DD00), to(#297D00));
+  background-image: -webkit-linear-gradient(top, #48DD00, #297D00);
+  background-image: -moz-linear-gradient(top, #48DD00, #297D00);
+  background-image: -ms-linear-gradient(top, #48DD00, #297D00);
+  background-image: -o-linear-gradient(top, #48DD00, #297D00);
+  background-image: linear-gradient(to bottom, #48DD00, #297D00);filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#48DD00, endColorstr=#297D00);
 }
 
 @media (max-height: 700px) {

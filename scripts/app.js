@@ -153,12 +153,12 @@ var app = {
 
   showContinueModal: function() {
     var modal = document.querySelectorAll('.continueModal')[0];
-    modal.style[Modernizr.prefixed('transform')] = 'translateX(81%)';
+    modal.style[Modernizr.prefixed('transform')] = 'translateX(-50%)';
   },
 
   hideContinueModal: function() {
     var modal = document.querySelectorAll('.continueModal')[0];
-    modal.style[Modernizr.prefixed('transform')] = 'translateX(-100%)';
+    modal.style[Modernizr.prefixed('transform')] = 'translateX(-201%)';
   }
 };
 
