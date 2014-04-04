@@ -80,7 +80,7 @@ function Game() {
     var scores;
     if (this.melds.length > 0) {
       if (app.handsCenteredOn !== 0.56) {
-        this.centerHandsOn(0.56);
+        this.centerHandsOn(0.53);
         scores = document.querySelectorAll('.computerScore, .playerScore');
         scores[0].classList.add('recentered');
         scores[1].classList.add('recentered');
