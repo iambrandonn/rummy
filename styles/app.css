@@ -450,3 +450,7 @@ body {
   text-align: center;
   transform: translateZ(2px);
 }
+
+.preload {
+  transition: all 0s linear !important;
+}

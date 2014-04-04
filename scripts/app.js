@@ -81,7 +81,17 @@ var app = {
 
     window.scroll(0, 500);
   },
+  removePreload: function() {
+    var elements = document.querySelectorAll('.preload');
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].classList.remove('preload');
+    }
+  },
   init: function() {
+    // The preload class will prevent css transitions while the page is being loaded
+    // Once the page is loaded we need to remove it to re-enable the transitions
+    app.removePreload();
+
     // When the browser resizes we need to update our layout
     window.addEventListener('resize:end', function() {
       app.updateLayoutVariables();
