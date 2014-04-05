@@ -28,8 +28,12 @@ function Game() {
     app.game.layout();
     app.players[1].hand.show();
 
-    // Show continue
-    app.showContinueModal();
+    if (app.players[0].score >= 100 || app.players[1].score >= 100) {
+      app.showWinnerModal();
+    }
+    else {
+      app.showContinueModal();
+    }
   };
 
   this.nextHand = function() {

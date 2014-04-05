@@ -126,7 +126,7 @@ var app = {
       }
     });
 
-    var continueButton = document.querySelectorAll('.continueModal > .button')[0];
+    var continueButton = document.querySelectorAll('#continueModal > .button')[0];
     continueButton.addEventListener('click', function() {
       app.hideContinueModal();
       app.game.nextHand();
@@ -146,19 +146,49 @@ var app = {
 
   updateScoreDOM: function() {
     document.querySelectorAll('.playerScore > .scoreValue')[0].textContent = app.players[0].score;
-    document.querySelectorAll('#continueYourScore')[0].textContent = app.players[0].score;
     document.querySelectorAll('.computerScore > .scoreValue')[0].textContent = app.players[1].score;
-    document.querySelectorAll('#continueOpponentScore')[0].textContent = app.players[1].score;
   },
 
-  showContinueModal: function() {
-    var modal = document.querySelectorAll('.continueModal')[0];
+  showModal: function(id) {
+    var modal = document.querySelectorAll('#' + id)[0];
     modal.style[Modernizr.prefixed('transform')] = 'translateX(-50%) translateZ(2px)';
   },
 
-  hideContinueModal: function() {
-    var modal = document.querySelectorAll('.continueModal')[0];
+  hideModal: function(id) {
+    var modal = document.querySelectorAll('#' + id)[0];
     modal.style[Modernizr.prefixed('transform')] = 'translateX(-201%) translateZ(2px)';
+  },
+
+  showContinueModal: function() {
+    document.querySelectorAll('#continueYourScore')[0].textContent = app.players[0].score;
+    document.querySelectorAll('#continueOpponentScore')[0].textContent = app.players[1].score;
+
+    this.showModal('continueModal');
+  },
+
+  hideContinueModal: function() {
+    this.hideModal('continueModal');
+  },
+
+  showWinnerModal: function() {
+    if (app.players[0].score < app.players[1].score) {
+      document.querySelectorAll('#winnerModal .gameResult')[0].textContent = 'You Won!';
+    }
+    else if (app.players[0].score === app.players[1].score) {
+      document.querySelectorAll('#winnerModal .gameResult')[0].textContent = 'It\'s a Tie!';
+    }
+    else {
+      document.querySelectorAll('#winnerModal .gameResult')[0].textContent = 'You Lost!';
+    }
+
+    document.querySelectorAll('#winnerYourScore')[0].textContent = app.players[0].score;
+    document.querySelectorAll('#winnerOpponentScore')[0].textContent = app.players[1].score;
+
+    this.showModal('winnerModal');
+  },
+
+  hideWinnerModal: function() {
+    this.hideModal('winnerModal');
   }
 };
 

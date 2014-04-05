@@ -12,14 +12,24 @@
       <span class="">For the best experience we recommend playing in landscape orientation</span>
     </div>
 
-    <div class="winnerModal preload">
-      <span class="winnerText">You won!!!!</span>
+    <div class="modal preload" id="winnerModal">
+      <div class="gameResult">You Won!</div>
+      <div class="scores">
+        <div class="score">
+          <span class="player">Opponent:</span><span class="value" id="winnerOpponentScore">0</span>
+        </div>
+        <div class="score">
+          <span class="player">You:</span><span class="value" id="winnerYourScore">0</span>
+        </div>
+      </div>
+
+      <input class="button" type="button" value="Play Again" />
     </div>
 
     <div class="arrow stock icon-arrow-up-right"></div>
     <div class="arrow discard icon-arrow-up-right"></div>
 
-    <div class="continueModal preload">
+    <div class="modal preload" id="continueModal">
       <div class="cumulativeScore">Cumulative Score</div>
       <div class="scores">
         <div class="score">
