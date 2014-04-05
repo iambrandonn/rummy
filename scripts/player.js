@@ -2,9 +2,13 @@
 /* exported Player */
 
 function Player(isComputer) {
-  this.hand = null;
-  this.isComputer = isComputer;
-  this.score = 0;
+  this.startFresh = function() {
+    this.hand = null;
+    this.isComputer = isComputer;
+    this.score = 0;
+  };
+
+  this.startFresh();
 
   this.shouldChoose = function(cardShowing) {
     // If it will get you a meld, do it
@@ -36,7 +40,9 @@ function Player(isComputer) {
       }
 
       setTimeout(function() {
-        that.discard(that.hand.chooseDiscard());
+        if (that.hand.length > 0) {
+          that.discard(that.hand.chooseDiscard());
+        }
 
         app.game.layout();
       }, app.animationTime);

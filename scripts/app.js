@@ -31,6 +31,15 @@ var app = {
     document.querySelectorAll('.orientationWarning')[0].style.display = 'none';
     app.orientationWarningShowing = false;
   },
+  restartGame: function() {
+    this.hideWinnerModal();
+    this.game.deck.destroy();
+    this.players[0].startFresh();
+    this.players[1].startFresh();
+    this.game = new Game();
+    this.game.deal();
+    this.updateScoreDOM();
+  },
   updateLayoutVariables: function() {
     app.screenWidth = window.innerWidth;
     app.screenHeight = document.documentElement.clientHeight;
@@ -130,6 +139,11 @@ var app = {
     continueButton.addEventListener('click', function() {
       app.hideContinueModal();
       app.game.nextHand();
+    });
+
+    var playAgainButton = document.querySelectorAll('#winnerModal > .button')[0];
+    playAgainButton.addEventListener('click', function() {
+      app.restartGame();
     });
 
     // Set up fastclick for mobile devices

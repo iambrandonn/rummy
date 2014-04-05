@@ -4,6 +4,12 @@
 function Deck() {
   this.cards =  [];
 
+  this.destroy = function() {
+    for (var i = 0; i < this.cards.length; i++) {
+      document.body.removeChild(this.cards[i].element);
+    }
+  };
+
   this.shuffle = function() {
     this.cards = this.shuffleArray(this.cards);
   };

@@ -356,9 +356,7 @@ body {
 }
 
 .button {
-  /*background: #48DD00;*/
-  /*-webkit-appearance: none;*/
-  /*border: 0;*/
+  outline: 0;
   font-size: 30px;
   border-radius: 5px;
   color: #FFF;
