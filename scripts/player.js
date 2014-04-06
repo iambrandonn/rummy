@@ -40,7 +40,7 @@ function Player(isComputer) {
       }
 
       setTimeout(function() {
-        if (that.hand.length > 0) {
+        if (that.hand.cards.length > 0) {
           that.discard(that.hand.chooseDiscard());
         }
 

@@ -46,17 +46,11 @@ function Card(newSuit, newValue) {
       this.scale = scale;
 
       var transformDefinition = 'translateX(' + x + 'px) translateY(' + y + 'px) translateZ(1px)';
-      if (rotation !== undefined) {
+      if (rotation !== undefined && rotation !== 0) {
         transformDefinition += ' rotateZ(' + rotation + 'deg)';
       }
-      else {
-        transformDefinition += ' rotateZ(0.01deg)';
-      }
-      if (scale !== undefined) {
+      if (scale !== undefined && scale !== 1) {
         transformDefinition += ' scale(' + scale + ')';
-      }
-      else {
-        transformDefinition += ' scale(1)';
       }
       this.element.style[Modernizr.prefixed('transform')] = transformDefinition;
     }

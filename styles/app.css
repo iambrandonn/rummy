@@ -18,7 +18,6 @@ body {
   height: 198px;
   position: absolute;
   z-index: 2;
-  box-shadow: #4C4B4A -1px 1px 3px;
   border: 1px solid #333;
   border-radius: 10px;
   transition: -webkit-transform .6s ease-out;
