@@ -1,4 +1,4 @@
-/* global Modernizr, console */
+/* global Modernizr, console, app */
 /* exported Card */
 
 function Card(newSuit, newValue) {
@@ -9,17 +9,27 @@ function Card(newSuit, newValue) {
   this.rotation = 0;
   this.scale = 1;
   this.z = 1;
-  this.element = document.createElement('div');
-  this.element.card = this;
-  this.element.classList.add('card');
+  this.element = document.querySelectorAll('._' + this.rank + '.' + this.suit)[0];
   this.element.classList.add('hidden');
-  this.element.classList.add('_' + this.rank);
-  this.element.classList.add(this.suit);
 
   this.element.addEventListener('click', function() {
     var cardClickedEvent = document.createEvent('UIEvents');
     cardClickedEvent.initEvent('cardClicked', true, true);
-    cardClickedEvent.card = this.card;
+    var suit, rank;
+    var classArray = this.className.split(' ');
+    for (var i = 0; i < classArray.length; i++) {
+      if (
+        classArray[i] === 'heart' ||
+        classArray[i] === 'club' ||
+        classArray[i] === 'diamond' ||
+        classArray[i] === 'spade'
+      ) {
+        suit = classArray[i];
+      } else if (classArray[i].charAt(0) === '_') {
+        rank = classArray[i].substr(1);
+      }
+    }
+    cardClickedEvent.card = app.game.deck.getCard(suit, rank);
     document.dispatchEvent(cardClickedEvent);
   });
 

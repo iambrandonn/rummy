@@ -4,6 +4,14 @@
 function Deck() {
   this.cards =  [];
 
+  this.getCard = function(suit, rank) {
+    for (var i = 0; i < this.cards.length; i++) {
+      if (this.cards[i].suit === suit && this.cards[i].rank === rank) {
+        return this.cards[i];
+      }
+    }
+  };
+
   this.destroy = function() {
     for (var i = 0; i < this.cards.length; i++) {
       document.body.removeChild(this.cards[i].element);
@@ -52,14 +60,6 @@ function Deck() {
     return newArray;
   };
 
-  this.addElementsToDom = function() {
-    var body = document.body;
-
-    for (var i = 0; i < this.cards.length; i++) {
-      body.appendChild(this.cards[i].element);
-    }
-  };
-
   for (var suit = 0; suit <= 3; suit++) {
     var suitValue;
     switch (suit) {
@@ -92,5 +92,4 @@ function Deck() {
   }
 
   this.shuffle();
-  this.addElementsToDom();
 }
