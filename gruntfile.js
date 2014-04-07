@@ -38,6 +38,7 @@ module.exports = function(grunt) {
             'scripts/modernizr.js',
             'scripts/resizeend.js',
             'scripts/states.js',
+            'scripts/domMap.js',
             'scripts/card.js',
             'scripts/deck.js',
             'scripts/player.js',

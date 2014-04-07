@@ -2,6 +2,7 @@
 /* exported Deck */
 
 function Deck() {
+  this.type = 'Deck';
   this.cards =  [];
 
   this.getCard = function(suit, rank) {
@@ -9,12 +10,6 @@ function Deck() {
       if (this.cards[i].suit === suit && this.cards[i].rank === rank) {
         return this.cards[i];
       }
-    }
-  };
-
-  this.destroy = function() {
-    for (var i = 0; i < this.cards.length; i++) {
-      document.body.removeChild(this.cards[i].element);
     }
   };
 

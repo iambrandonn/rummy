@@ -1,7 +1,8 @@
-/* global Modernizr, console, app */
+/* global Modernizr, console, app, domMap */
 /* exported Card */
 
 function Card(newSuit, newValue) {
+  this.type = 'Card';
   this.rank = newValue;
   this.suit = newSuit;
   this.x = 0;
@@ -9,10 +10,10 @@ function Card(newSuit, newValue) {
   this.rotation = 0;
   this.scale = 1;
   this.z = 1;
-  this.element = document.querySelectorAll('._' + this.rank + '.' + this.suit)[0];
-  this.element.classList.add('hidden');
 
-  this.element.addEventListener('click', function() {
+  var domElement = domMap[this.rank + '_' + this.suit];
+
+  domElement.addEventListener('click', function() {
     var cardClickedEvent = document.createEvent('UIEvents');
     cardClickedEvent.initEvent('cardClicked', true, true);
     var suit, rank;
@@ -62,23 +63,23 @@ function Card(newSuit, newValue) {
       if (scale !== undefined && scale !== 1) {
         transformDefinition += ' scale(' + scale + ')';
       }
-      this.element.style[Modernizr.prefixed('transform')] = transformDefinition;
+      domMap[this.rank + '_' + this.suit].style[Modernizr.prefixed('transform')] = transformDefinition;
     }
   };
 
   this.setZ = function(z) {
     if (z !== this.z) {
       this.z = z;
-      this.element.style[Modernizr.prefixed('zIndex')] = z;
+      domMap[this.rank + '_' + this.suit].style[Modernizr.prefixed('zIndex')] = z;
     }
   };
 
   this.show = function() {
-    this.element.classList.remove('hidden');
+    this.removeCustomClass('hidden');
   };
 
   this.hide = function() {
-    this.element.classList.add('hidden');
+    this.addCustomClass('hidden');
   };
 
   this.log = function() {
@@ -86,14 +87,27 @@ function Card(newSuit, newValue) {
   };
 
   this.setPlayerHand = function() {
-    this.element.classList.add('playerHand');
-    this.element.classList.remove('computerHand');
+    this.addCustomClass('playerHand');
+    this.removeCustomClass('computerHand');
   };
 
   this.setComputerHand = function() {
-    this.element.classList.add('computerHand');
-    this.element.classList.remove('playerHand');
+    this.addCustomClass('computerHand');
+    this.removeCustomClass('playerHand');
+  };
+
+  this.click = function() {
+    domMap[this.rank + '_' + this.suit].click();
+  };
+
+  this.addCustomClass = function(theClass) {
+    domMap[this.rank + '_' + this.suit].classList.add(theClass);
+  };
+
+  this.removeCustomClass = function(theClass) {
+    domMap[this.rank + '_' + this.suit].classList.remove(theClass);
   };
 
   this.numericRank = this.findNumericRank();
+  this.hide();
 }

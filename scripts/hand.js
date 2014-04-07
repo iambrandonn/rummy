@@ -2,6 +2,7 @@
 /* exported Hand */
 
 function Hand(cards, computer) {
+  this.type = 'Hand';
   this.cards = cards;
   this.isComputer = computer;
   this.isPretend = false; // When testing for valid melds, we create some pretend hands

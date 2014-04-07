@@ -1,6 +1,7 @@
-/* global Game, states, Player, FastClick, Modernizr */
+/* global Card, Deck, Hand, Game, states, Player, FastClick, Modernizr, domMap */
  
 var app = {
+  type: 'app',
   computerGoesFirst: false,
   game: new Game(),
   handsCenteredOn: 0.5,
@@ -33,7 +34,6 @@ var app = {
   },
   restartGame: function() {
     this.hideWinnerModal();
-    this.game.deck.destroy();
     this.players[0].startFresh();
     this.players[1].startFresh();
     this.game = new Game();
@@ -66,7 +66,7 @@ var app = {
     }
 
     // Opponent Score
-    document.querySelectorAll('.computerScore')[0].style.top = (app.opponentY + app.cardHeight + 10) + 'px';
+    domMap.computerScore.style.top = (app.opponentY + app.cardHeight + 10) + 'px';
     
     // Set StockY
     if (app.screenHeight < 506) {
@@ -109,13 +109,13 @@ var app = {
 
     document.querySelectorAll('.arrow.stock')[0].addEventListener('click', function() {
       if (app.game.stock.length > 0) {
-        app.game.stock[app.game.stock.length - 1].element.click();
+        app.game.stock[app.game.stock.length - 1].click();
       }
     });
 
     document.querySelectorAll('.arrow.discard')[0].addEventListener('click', function() {
       if (app.game.discards.length > 0) {
-        app.game.discards[app.game.discards.length - 1].element.click();
+        app.game.discards[app.game.discards.length - 1].click();
       }
     });
 
@@ -154,8 +154,16 @@ var app = {
       };
     }, false);
 
+    // Load previously save state
+    // var resuming = app.retrieveState();
+
     app.updateLayoutVariables();
-    app.game.deal();
+    // if (resuming) {
+    //   app.game.layout();
+    // }
+    // else {
+      app.game.deal();
+    // }
   },
 
   updateScoreDOM: function() {
@@ -203,8 +211,70 @@ var app = {
 
   hideWinnerModal: function() {
     this.hideModal('winnerModal');
+  },
+
+  saveState: function() {
+    localStorage.setItem('state', JSON.stringify(app));
+  },
+
+  retrieveState: function() {
+    var state = localStorage.getItem('state');
+    if (state !== null) {
+      state = JSON.parse(state);
+      this.app = extend(app, state);
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 };
+
+function extend(target, src) {
+  var keys = Object.keys(src);
+  for (var i = 0; i < keys.length; i++) {
+    if (typeof src[keys[i]] === 'object') {
+      if (src[keys[i]] === null) {
+        target[keys[i]] = null;
+      }
+      else {
+        if (Array.isArray(src[keys[i]])) {
+          target[keys[i]] = [];
+          for (var j = 0; j < src[keys[i]].length; j++) {
+            target[keys[i]].push(null);
+            extend(target[keys[i]][j], src[keys[i]][j]);
+          }
+        }
+        else if (target[keys[i]] === undefined || target[keys[i]] === null) {
+          switch (src[keys[i]].type) {
+            case 'Card':
+              target[keys[i]] = new Card(src[keys[i]].suit, src[keys[i]].rank);
+              break;
+            case 'Deck':
+              target[keys[i]] = new Deck();
+              break;
+            case 'Game':
+              target[keys[i]] = new Game();
+              break;
+            case 'Hand':
+              target[keys[i]] = new Hand();
+              break;
+            case 'Player':
+              target[keys[i]] = new Player();
+              break;
+            default:
+              target[keys[i]] = {};
+              break;
+          }
+        }
+        extend(target[keys[i]], src[keys[i]]);
+      }
+    }
+    else {
+      target[keys[i]] = src[keys[i]];
+    }
+  }
+}
 
 var readyStateCheckInterval = setInterval(function() {
   if (document.readyState === 'complete') {

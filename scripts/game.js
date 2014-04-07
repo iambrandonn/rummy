@@ -1,7 +1,8 @@
-/* global Deck, app, Hand, states */
+/* global Deck, app, Hand, states, domMap */
 /* exported Game */
 
 function Game() {
+  this.type = 'Game';
   this.deck = new Deck();
   this.discards = [];
   this.stock = [];
@@ -9,8 +10,6 @@ function Game() {
   this.computerTurn = false;
   this.state = null;
 
-  var stockArrow = document.querySelectorAll('.arrow.stock')[0];
-  var discardArrow = document.querySelectorAll('.arrow.discard')[0];
   var stockArrowX, stockArrowY, discardArrowX, discardArrowY;
 
   this.finishHand = function() {
@@ -41,7 +40,7 @@ function Game() {
     app.computerGoesFirst = !app.computerGoesFirst;
 
     for (var cardIndex in this.deck.cards) {
-      this.deck.cards[cardIndex].element.classList.remove('meld');
+      this.deck.cards[cardIndex].removeCustomClass('meld');
       this.deck.cards[cardIndex].hide();
     }
     this.discards = [];
@@ -60,6 +59,9 @@ function Game() {
 
   this.toggleTurn = function() {
     var that = this;
+
+    app.saveState();
+    
     setTimeout(function() {
       that.computerTurn = !that.computerTurn;
 
@@ -81,21 +83,18 @@ function Game() {
 
   // Call this to update the display
   this.layout = function() {
-    var scores;
     if (this.melds.length > 0) {
       if (app.handsCenteredOn !== 0.56) {
         this.centerHandsOn(0.53);
-        scores = document.querySelectorAll('.computerScore, .playerScore');
-        scores[0].classList.add('recentered');
-        scores[1].classList.add('recentered');
+        domMap.computerScore.classList.add('recentered');
+        domMap.playerScore.classList.add('recentered');
       }
     }
     else {
       if (app.handsCenteredOn !== 0.5) {
         this.centerHandsOn(0.5);
-        scores = document.querySelectorAll('.computerScore, .playerScore');
-        scores[0].classList.remove('recentered');
-        scores[1].classList.remove('recentered');
+        domMap.computerScore.classList.remove('recentered');
+        domMap.playerScore.classList.remove('recentered');
       }
     }
     this.layoutMelds();
@@ -173,12 +172,12 @@ function Game() {
     var newY = app.stockY + 220;
 
     if (stockArrowX !== newX) {
-      stockArrow.style.left = newX  + 'px';
+      domMap.stockArrow.style.left = newX  + 'px';
       stockArrowX = newX;
     }
 
     if (stockArrowY !== newY) {
-      stockArrow.style.top = newY + 'px';
+      domMap.stockArrow.style.top = newY + 'px';
       stockArrowY = newY;
     }
 
@@ -186,31 +185,31 @@ function Game() {
     newX = (app.screenWidth * app.handsCenteredOn) + 90 - (app.cardWidth / 3);
 
     if (discardArrowX !== newX) {
-      discardArrow.style.left = newX + 'px';
+      domMap.discardArrow.style.left = newX + 'px';
       discardArrowX = newX;
     }
 
     if (discardArrowY !== newY) {
-      discardArrow.style.top = newY + 'px';
+      domMap.discardArrow.style.top = newY + 'px';
       discardArrowY = newY;
     }
   };
 
   this.updateHintArrows = function() {
     if (app.game.state === states.DRAW) {
-      stockArrow.style.opacity = '1';
-      discardArrow.style.opacity = '1';
-      discardArrow.classList.remove('rotated');
+      domMap.stockArrow.style.opacity = '1';
+      domMap.discardArrow.style.opacity = '1';
+      domMap.discardArrow.classList.remove('rotated');
     }
     else if (app.game.state === states.DISCARD) {
-      stockArrow.style.opacity = '0';
-      discardArrow.style.opacity = '1';
-      discardArrow.classList.add('rotated');
+      domMap.stockArrow.style.opacity = '0';
+      domMap.discardArrow.style.opacity = '1';
+      domMap.discardArrow.classList.add('rotated');
     }
     else {
-      stockArrow.style.opacity = '0';
-      discardArrow.style.opacity = '0';
-      discardArrow.classList.remove('rotated');
+      domMap.stockArrow.style.opacity = '0';
+      domMap.discardArrow.style.opacity = '0';
+      domMap.discardArrow.classList.remove('rotated');
     }
   };
 
@@ -254,9 +253,9 @@ function Game() {
       for(var cardIndex in this.melds[meldIndex]) {
         this.melds[meldIndex][cardIndex].updateLayout(currentCardX, currentMeldY, 0, cardScale);
         this.melds[meldIndex][cardIndex].setZ(zIndex++);
-        this.melds[meldIndex][cardIndex].element.classList.remove('computerHand');
-        this.melds[meldIndex][cardIndex].element.classList.remove('playerHand');
-        this.melds[meldIndex][cardIndex].element.classList.add('meld');
+        this.melds[meldIndex][cardIndex].removeCustomClass('computerHand');
+        this.melds[meldIndex][cardIndex].removeCustomClass('playerHand');
+        this.melds[meldIndex][cardIndex].addCustomClass('meld');
         this.melds[meldIndex][cardIndex].show();
         currentCardX += 23;
       }

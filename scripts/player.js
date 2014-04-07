@@ -2,6 +2,8 @@
 /* exported Player */
 
 function Player(isComputer) {
+  this.type = 'Player';
+  
   this.startFresh = function() {
     this.hand = null;
     this.isComputer = isComputer;
