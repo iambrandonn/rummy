@@ -1,127 +1,115 @@
-/* global Deck, app, Hand, states, domMap */
+/* global Deck, app, Hand, states, domMap, Card, App, Player */
 /* exported Game */
 
-function Game() {
-  this.type = 'Game';
-  this.deck = new Deck();
-  this.discards = [];
-  this.stock = [];
-  this.melds = [];
-  this.computerTurn = false;
-  this.state = null;
-
-  var stockArrowX, stockArrowY, discardArrowX, discardArrowY;
-
-  this.finishHand = function() {
+var Game = {
+  finishHand: function() {
     // update scores
     if (app.players[0].hand.cards.length === 0) {
-      app.players[1].score += app.players[1].hand.getScore();
+      app.players[1].score += Hand.getScore(app.players[1].hand);
     }
     else if (app.players[1].hand.cards.length === 0) {
-      app.players[0].score += app.players[0].hand.getScore();
+      app.players[0].score += Hand.getScore(app.players[0].hand);
     }
-    app.updateScoreDOM();
+    App.updateScoreDOM();
 
     // Show computers hand if any cards left
     app.opponentY += 125;
-    app.game.layout();
-    app.players[1].hand.show();
+    Game.layout(app.game);
+    Hand.show(app.players[1].hand);
 
     if (app.players[0].score >= 100 || app.players[1].score >= 100) {
-      app.showWinnerModal();
+      App.showWinnerModal();
     }
     else {
-      app.showContinueModal();
+      App.showContinueModal();
     }
-  };
+  },
 
-  this.nextHand = function() {
+  nextHand: function(game) {
     app.opponentY -= 125;
     app.computerGoesFirst = !app.computerGoesFirst;
 
-    for (var cardIndex in this.deck.cards) {
-      this.deck.cards[cardIndex].removeCustomClass('meld');
-      this.deck.cards[cardIndex].hide();
+    for (var cardIndex in game.deck.cards) {
+      Card.removeCustomClass(game.deck.cards[cardIndex], 'meld');
+      Card.hide(game.deck.cards[cardIndex]);
     }
-    this.discards = [];
-    this.melds = [];
-    app.players[0].hand.empty();
-    app.players[1].hand.empty();
-    this.stock = this.deck.cards.slice(0);
+    game.discards = [];
+    game.melds = [];
+    Hand.empty(app.players[0].hand);
+    Hand.empty(app.players[1].hand);
+    game.stock = game.deck.cards.slice(0);
 
     setTimeout(function() {
-      app.game.deal();
+      Game.deal(app.game);
     }, app.animationTime);
 
-    app.game.layout();
-    this.deck.shuffle();
-  };
+    Game.layout(app.game);
+    Deck.shuffle(game.deck);
+  },
 
-  this.toggleTurn = function() {
-    var that = this;
-
-    app.saveState();
+  toggleTurn: function(game) {
+    App.saveState();
     
     setTimeout(function() {
-      that.computerTurn = !that.computerTurn;
+      game.computerTurn = !game.computerTurn;
 
       // check for a winner
       if (app.players[0].hand.cards.length === 0 || app.players[1].hand.cards.length === 0) {
-        that.finishHand();
+        Game.finishHand();
       }
       else {
-        if (that.computerTurn) {
-          app.players[1].autoPlay();
+        if (game.computerTurn) {
+          Player.autoPlay(app.players[1]);
         }
         else {
-          that.state = states.DRAW;
-          that.updateHintArrows();
+          game.state = states.DRAW;
+          Game.updateHintArrows(game);
         }
       }
     }, app.animationTime);
-  };
+  },
 
   // Call this to update the display
-  this.layout = function() {
-    if (this.melds.length > 0) {
-      if (app.handsCenteredOn !== 0.56) {
-        this.centerHandsOn(0.53);
+  layout: function(game) {
+    if (game.melds.length > 0) {
+      if (app.handsCenteredOn !== 0.53) {
+        Game.centerHandsOn(0.53);
         domMap.computerScore.classList.add('recentered');
         domMap.playerScore.classList.add('recentered');
       }
     }
     else {
       if (app.handsCenteredOn !== 0.5) {
-        this.centerHandsOn(0.5);
+        Game.centerHandsOn(0.5);
         domMap.computerScore.classList.remove('recentered');
         domMap.playerScore.classList.remove('recentered');
       }
     }
-    this.layoutMelds();
-    this.layoutStock();
-    this.layoutDiscards();
-    app.players[0].hand.layout();
-    app.players[1].hand.layout();
-    this.layoutHintArrows();
-  };
+    Game.layoutMelds(game);
+    Game.layoutStock(game);
+    Game.layoutDiscards(game);
+    Hand.layout(app.players[0].hand);
+    Hand.layout(app.players[1].hand);
+    Game.layoutHintArrows(game);
+  },
 
   // This will change where the players hands are centered around.
-  this.centerHandsOn = function(percent) {
+  centerHandsOn: function(percent) {
     app.handsCenteredOn = percent;
-  };
+  },
 
-  this.deal = function() {
+  deal: function(game) {
     // To begin, every card from the deck is in the stock
-    this.stock = this.deck.cards.slice(0);
+    game.stock = game.deck.cards.slice(0);
 
     // Each player gets 10 cards in their hand
-    app.players[0].hand = new Hand(this.stock.splice(0, 10), false);
-    app.players[0].hand.order();
-    app.players[1].hand = new Hand(this.stock.splice(0, 10), true);
-    app.players[1].hand.order();
+    app.players[0].hand = Hand.createHand(game.stock.splice(0, 10), false);
+    Hand.order(app.players[0].hand);
+    app.players[1].hand = Hand.createHand(game.stock.splice(0, 10), true);
+    Hand.order(app.players[1].hand);
 
     // Update the display according to the deal
-    this.layout();
+    Game.layout(game);
 
     // Wait for initial layout to finish
     setTimeout(function() {
@@ -129,79 +117,80 @@ function Game() {
       app.game.discards.push(app.game.stock.pop());
 
       // Just render the discards
-      app.game.layoutDiscards();
+      Game.layoutDiscards(app.game);
 
       // Wait for the card to be moved onto the discard pile
       setTimeout(function() {
         // Turn over the card
-        app.game.discards[0].show();
+        Card.show(app.game.discards[0]);
 
         // Start the game
-        app.game.start();
+        Game.start(app.game);
       }, app.animationTime + 50);
     }, app.animationTime + 50);
-  };
+  },
 
-  this.start = function() {
+  start: function(game) {
     if (app.computerGoesFirst) {
-      this.computerTurn = true;
-      app.players[1].autoPlay();
+      game.computerTurn = true;
+      Player.autoPlay(app.players[1]);
     }
     else {
-      this.computerTurn = false;
-      this.state = states.DRAW;
-      this.updateHintArrows();
+      game.computerTurn = false;
+      game.state = states.DRAW;
+      Game.updateHintArrows(game);
     }
-  };
+  },
 
-  this.layoutStock = function() {
+  layoutStock: function(game) {
     var zIndex = 10;
-    for (var stockIndex = 0; stockIndex < this.stock.length; stockIndex++) {
-      this.stock[stockIndex].updateLayout(
+    for (var stockIndex = 0; stockIndex < game.stock.length; stockIndex++) {
+      Card.updateLayout(
+        game.stock[stockIndex],
         (app.screenWidth * app.handsCenteredOn) - 100 - (app.cardWidth / 2),
         app.stockY,
         0
       );
-      app.game.stock[stockIndex].setZ(zIndex++);
+      Card.setZ(app.game.stock[stockIndex], zIndex++);
     }
-  };
+  },
 
-  this.layoutHintArrows = function() {
+  layoutHintArrows: function(game) {
     // Stock hint arrow
     var newX = (app.screenWidth * app.handsCenteredOn) - 95;
     var newY = app.stockY + 220;
 
-    if (stockArrowX !== newX) {
+    if (game.stockArrowX !== newX) {
       domMap.stockArrow.style.left = newX  + 'px';
-      stockArrowX = newX;
+      game.stockArrowX = newX;
     }
 
-    if (stockArrowY !== newY) {
+    if (game.stockArrowY !== newY) {
       domMap.stockArrow.style.top = newY + 'px';
-      stockArrowY = newY;
+      game.stockArrowY = newY;
     }
 
     // Discard hint arrow
     newX = (app.screenWidth * app.handsCenteredOn) + 90 - (app.cardWidth / 3);
 
-    if (discardArrowX !== newX) {
+    if (game.discardArrowX !== newX) {
       domMap.discardArrow.style.left = newX + 'px';
-      discardArrowX = newX;
+      game.discardArrowX = newX;
     }
 
-    if (discardArrowY !== newY) {
+    if (game.discardArrowY !== newY) {
       domMap.discardArrow.style.top = newY + 'px';
-      discardArrowY = newY;
+      game.discardArrowY = newY;
     }
-  };
+  },
 
-  this.updateHintArrows = function() {
-    if (app.game.state === states.DRAW) {
+  updateHintArrows: function(game) {
+    if (game.state === states.DRAW) {
       domMap.stockArrow.style.opacity = '1';
       domMap.discardArrow.style.opacity = '1';
       domMap.discardArrow.classList.remove('rotated');
     }
-    else if (app.game.state === states.DISCARD) {
+    else if (game.state === states.DISCARD) {
       domMap.stockArrow.style.opacity = '0';
       domMap.discardArrow.style.opacity = '1';
       domMap.discardArrow.classList.add('rotated');
@@ -211,35 +200,36 @@ function Game() {
       domMap.discardArrow.style.opacity = '0';
       domMap.discardArrow.classList.remove('rotated');
     }
-  };
+  },
 
-  this.layoutDiscards = function() {
+  layoutDiscards: function(game) {
     var zIndex = 10;
-    for (var i = 0; i < app.game.discards.length; i++) {
-      app.game.discards[i].updateLayout(
+    for (var i = 0; i < game.discards.length; i++) {
+      Card.updateLayout(
+        app.game.discards[i],
         (app.screenWidth * app.handsCenteredOn) + 100 - (app.cardWidth / 2),
         app.stockY,
         0
       );
-      app.game.discards[i].setZ(zIndex++);
+      Card.setZ(game.discards[i], zIndex++);
     }
-  };
+  },
 
-  this.layoutMelds = function() {
-    var yDistance = (app.screenHeight - 30) / this.melds.length;
+  layoutMelds: function(game) {
+    var yDistance = (app.screenHeight - 30) / game.melds.length;
     var currentMeldY = 15;
     var zIndex = 10;
     var cardScale;
     var cardOffset;
-    if (this.melds.length < 4) {
+    if (game.melds.length < 4) {
       cardScale = 0.9;
       cardOffset = 10;
     }
-    else if (this.melds.length < 5) {
+    else if (game.melds.length < 5) {
       cardScale = 0.7;
       cardOffset = 40;
     }
-    else if (this.melds.length < 6) {
+    else if (game.melds.length < 6) {
       cardScale = 0.6;
       cardOffset = 53;
     }
@@ -248,15 +238,15 @@ function Game() {
       cardOffset = 60;
     }
 
-    for (var meldIndex in this.melds) {
+    for (var meldIndex in game.melds) {
       var currentCardX = 40;
-      for(var cardIndex in this.melds[meldIndex]) {
-        this.melds[meldIndex][cardIndex].updateLayout(currentCardX, currentMeldY, 0, cardScale);
-        this.melds[meldIndex][cardIndex].setZ(zIndex++);
-        this.melds[meldIndex][cardIndex].removeCustomClass('computerHand');
-        this.melds[meldIndex][cardIndex].removeCustomClass('playerHand');
-        this.melds[meldIndex][cardIndex].addCustomClass('meld');
-        this.melds[meldIndex][cardIndex].show();
+      for(var cardIndex in game.melds[meldIndex]) {
+        Card.updateLayout(game.melds[meldIndex][cardIndex], currentCardX, currentMeldY, 0, cardScale);
+        Card.setZ(game.melds[meldIndex][cardIndex], zIndex++);
+        Card.removeCustomClass(game.melds[meldIndex][cardIndex], 'computerHand');
+        Card.removeCustomClass(game.melds[meldIndex][cardIndex], 'playerHand');
+        Card.addCustomClass(game.melds[meldIndex][cardIndex], 'meld');
+        Card.show(game.melds[meldIndex][cardIndex]);
         currentCardX += 23;
       }
 
@@ -267,5 +257,22 @@ function Game() {
         currentMeldY += yDistance;
       }
     }
-  };
-}
+  },
+
+  createGame: function() {
+    var result = {
+      deck: Deck.createDeck(),
+      discards: [],
+      stock: [],
+      melds: [],
+      computerTurn: false,
+      state: null,
+      stockArrowX: 0,
+      stockArrowY: 0,
+      discardArrowX: 0,
+      discardArrowY: 0
+    };
+
+    return result;
+  }
+};

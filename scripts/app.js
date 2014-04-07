@@ -1,9 +1,8 @@
-/* global Card, Deck, Hand, Game, states, Player, FastClick, Modernizr, domMap */
+/* global Card, Game, states, Player, FastClick, Modernizr, domMap */
  
 var app = {
-  type: 'app',
   computerGoesFirst: false,
-  game: new Game(),
+  game: Game.createGame(),
   handsCenteredOn: 0.5,
   cardWidth: 142,
   cardHeight: 199,
@@ -19,10 +18,13 @@ var app = {
   discardHintX: null,
   discardHintY: null,
   players: [
-    new Player(false),
-    new Player(true)
+    Player.createPlayer(false),
+    Player.createPlayer(true)
   ],
-  orientationWarningShowing: false,
+  orientationWarningShowing: false
+};
+
+var App = {
   showOrientationWarning: function() {
     document.querySelectorAll('.orientationWarning')[0].style.display = 'block';
     document.querySelectorAll('.orientationWarning')[0].style['z-index'] = '20000';
@@ -33,22 +35,22 @@ var app = {
     app.orientationWarningShowing = false;
   },
   restartGame: function() {
-    this.hideWinnerModal();
-    this.players[0].startFresh();
-    this.players[1].startFresh();
-    this.game = new Game();
-    this.game.deal();
-    this.updateScoreDOM();
+    App.hideWinnerModal();
+    Player.startFresh(app.players[0], false);
+    Player.startFresh(app.players[1], true);
+    app.game = Game.createGame();
+    Game.deal(app.game);
+    App.updateScoreDOM();
   },
   updateLayoutVariables: function() {
     app.screenWidth = window.innerWidth;
     app.screenHeight = document.documentElement.clientHeight;
 
     if (app.screenHeight > app.screenWidth && !app.orientationWarningShowing) {
-      app.showOrientationWarning();
+      App.showOrientationWarning();
     }
     else if (app.orientationWarningShowing) {
-      app.hideOrientationWarning();
+      App.hideOrientationWarning();
     }
 
     // Set PlayerY
@@ -99,23 +101,23 @@ var app = {
   init: function() {
     // The preload class will prevent css transitions while the page is being loaded
     // Once the page is loaded we need to remove it to re-enable the transitions
-    app.removePreload();
+    App.removePreload();
 
     // When the browser resizes we need to update our layout
     window.addEventListener('resize:end', function() {
-      app.updateLayoutVariables();
-      app.game.layout();
+      App.updateLayoutVariables();
+      Game.layout(app.game);
     }, false);
 
     document.querySelectorAll('.arrow.stock')[0].addEventListener('click', function() {
       if (app.game.stock.length > 0) {
-        app.game.stock[app.game.stock.length - 1].click();
+        Card.click(app.game.stock[app.game.stock.length - 1]);
       }
     });
 
     document.querySelectorAll('.arrow.discard')[0].addEventListener('click', function() {
       if (app.game.discards.length > 0) {
-        app.game.discards[app.game.discards.length - 1].click();
+        Card.click(app.game.discards[app.game.discards.length - 1]);
       }
     });
 
@@ -125,11 +127,11 @@ var app = {
         // Depending on what we are waiting for, react appropriately
         switch (app.game.state) {
           case states.DRAW:
-            app.players[0].draw(e.card);
+            Player.draw(app.players[0], e.card);
             break;
           case states.DISCARD:
-            app.players[0].discard(e.card);
-            app.game.layout();
+            Player.discard(app.players[0], e.card);
+            Game.layout(app.game);
             break;
         }
       }
@@ -137,13 +139,13 @@ var app = {
 
     var continueButton = document.querySelectorAll('#continueModal > .button')[0];
     continueButton.addEventListener('click', function() {
-      app.hideContinueModal();
-      app.game.nextHand();
+      App.hideContinueModal();
+      Game.nextHand(app.game);
     });
 
     var playAgainButton = document.querySelectorAll('#winnerModal > .button')[0];
     playAgainButton.addEventListener('click', function() {
-      app.restartGame();
+      App.restartGame();
     });
 
     // Set up fastclick for mobile devices
@@ -155,15 +157,16 @@ var app = {
     }, false);
 
     // Load previously save state
-    // var resuming = app.retrieveState();
+    var resuming = App.retrieveState();
 
-    app.updateLayoutVariables();
-    // if (resuming) {
-    //   app.game.layout();
-    // }
-    // else {
-      app.game.deal();
-    // }
+    App.updateLayoutVariables();
+
+    if (resuming) {
+      Game.layout(app.game);
+    }
+    else {
+      Game.deal(app.game);
+    }
   },
 
   updateScoreDOM: function() {
@@ -185,11 +188,11 @@ var app = {
     document.querySelectorAll('#continueYourScore')[0].textContent = app.players[0].score;
     document.querySelectorAll('#continueOpponentScore')[0].textContent = app.players[1].score;
 
-    this.showModal('continueModal');
+    App.showModal('continueModal');
   },
 
   hideContinueModal: function() {
-    this.hideModal('continueModal');
+    App.hideModal('continueModal');
   },
 
   showWinnerModal: function() {
@@ -206,11 +209,11 @@ var app = {
     document.querySelectorAll('#winnerYourScore')[0].textContent = app.players[0].score;
     document.querySelectorAll('#winnerOpponentScore')[0].textContent = app.players[1].score;
 
-    this.showModal('winnerModal');
+    App.showModal('winnerModal');
   },
 
   hideWinnerModal: function() {
-    this.hideModal('winnerModal');
+    App.hideModal('winnerModal');
   },
 
   saveState: function() {
@@ -220,8 +223,25 @@ var app = {
   retrieveState: function() {
     var state = localStorage.getItem('state');
     if (state !== null) {
-      state = JSON.parse(state);
-      this.app = extend(app, state);
+      app = JSON.parse(state);
+
+      // removed cached position values from cards
+      Card.cleanCardsCache(app.game.deck.cards);
+      Card.cleanCardsCache(app.players[0].hand.cards);
+      Card.cleanCardsCache(app.players[1].hand.cards);
+      Card.cleanCardsCache(app.game.discards);
+      Card.cleanCardsCache(app.game.stock);
+      for (var j = 0; j < app.game.melds.length; j++) {
+        Card.cleanCardsCache(app.game.melds[j]);
+      }
+
+      app.game.stockArrowX = 0;
+      app.game.stockArrowY = 0;
+      app.game.discardArrowX = 0;
+      app.game.discardArrowY = 0;
+      app.game.computerTurn = false;
+      app.game.state = states.DRAW;
+
       return true;
     }
     else {
@@ -230,55 +250,9 @@ var app = {
   }
 };
 
-function extend(target, src) {
-  var keys = Object.keys(src);
-  for (var i = 0; i < keys.length; i++) {
-    if (typeof src[keys[i]] === 'object') {
-      if (src[keys[i]] === null) {
-        target[keys[i]] = null;
-      }
-      else {
-        if (Array.isArray(src[keys[i]])) {
-          target[keys[i]] = [];
-          for (var j = 0; j < src[keys[i]].length; j++) {
-            target[keys[i]].push(null);
-            extend(target[keys[i]][j], src[keys[i]][j]);
-          }
-        }
-        else if (target[keys[i]] === undefined || target[keys[i]] === null) {
-          switch (src[keys[i]].type) {
-            case 'Card':
-              target[keys[i]] = new Card(src[keys[i]].suit, src[keys[i]].rank);
-              break;
-            case 'Deck':
-              target[keys[i]] = new Deck();
-              break;
-            case 'Game':
-              target[keys[i]] = new Game();
-              break;
-            case 'Hand':
-              target[keys[i]] = new Hand();
-              break;
-            case 'Player':
-              target[keys[i]] = new Player();
-              break;
-            default:
-              target[keys[i]] = {};
-              break;
-          }
-        }
-        extend(target[keys[i]], src[keys[i]]);
-      }
-    }
-    else {
-      target[keys[i]] = src[keys[i]];
-    }
-  }
-}
-
 var readyStateCheckInterval = setInterval(function() {
   if (document.readyState === 'complete') {
     clearInterval(readyStateCheckInterval);
-    app.init();
+    App.init();
   }
 }, 20);

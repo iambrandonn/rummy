@@ -1,102 +1,105 @@
-/* globals app, states */
+/* globals app, states, Card, Game, Hand */
 /* exported Player */
 
-function Player(isComputer) {
-  this.type = 'Player';
-  
-  this.startFresh = function() {
-    this.hand = null;
-    this.isComputer = isComputer;
-    this.score = 0;
-  };
+var Player = {
+  createPlayer: function(isComputer) {
+    var result = {
+      hand: null,
+      isComputer: isComputer,
+      score: 0
+    };
 
-  this.startFresh();
+    return result;
+  },
 
-  this.shouldChoose = function(cardShowing) {
+  startFresh: function(player, isComputer) {
+    player.hand = null;
+    player.isComputer = isComputer;
+    player.score = 0;
+  },
+
+  shouldChoose: function(player, cardShowing) {
     // If it will get you a meld, do it
-    if (this.hand.wouldResultInMeld(cardShowing)) {
+    if (Hand.wouldResultInMeld(player.hand, cardShowing)) {
       return true;
     }
     // If you have no cards near it, don't
-    else if (!this.hand.hasThisNumberCard(cardShowing) && !this.hand.hasCardNearThis(cardShowing)) {
+    else if (!Hand.hasThisNumberCard(player.hand, cardShowing) && !Hand.hasCardNearThis(player.hand, cardShowing)) {
       return false;
     }
     else {
       // Otherwise, pick randomly
       return Math.random() > 0.5;
     }
-  };
+  },
 
-  this.autoPlay = function() {
-    var that = this;
-    var layedDown = this.hand.layDownMelds();
-    app.game.layout();
+  autoPlay: function(player) {
+    var layedDown = Hand.layDownMelds(player.hand);
+    Game.layout(app.game);
     var delay = layedDown ? app.animationTime : 0;
 
     setTimeout(function() {
-      if (that.shouldChoose(app.game.discards[app.game.discards.length - 1])) {
-        that.draw(app.game.discards[app.game.discards.length - 1]);
+      if (Player.shouldChoose(player, app.game.discards[app.game.discards.length - 1])) {
+        Player.draw(player, app.game.discards[app.game.discards.length - 1]);
       }
       else {
-        that.draw(app.game.stock[app.game.stock.length - 1]);
+        Player.draw(player, app.game.stock[app.game.stock.length - 1]);
       }
 
       setTimeout(function() {
-        if (that.hand.cards.length > 0) {
-          that.discard(that.hand.chooseDiscard());
+        if (player.hand.cards.length > 0) {
+          Player.discard(player, Hand.chooseDiscard(player.hand));
         }
 
-        app.game.layout();
+        Game.layout(app.game);
       }, app.animationTime);
     }, delay);
-  };
+  },
 
-  this.draw = function(card) {
-    var that = this;
-
+  draw: function(player, card) {
     app.game.state = null;
     if (card === app.game.discards[app.game.discards.length - 1]) {
-      this.drawFromDiscards();
+      Player.drawFromDiscards(player);
     }
     else if (card === app.game.stock[app.game.stock.length - 1]) {
-      this.drawFromStock();
+      Player.drawFromStock(player);
     }
     else {
       app.game.state = states.DRAW;
       return;
     }
 
-    app.game.layout();
+    Game.layout(app.game);
 
     setTimeout(function() {
-      that.hand.layDownMelds();
-      app.game.layout();
-      if (that.hand.cards.length === 0) {
+      Hand.layDownMelds(player.hand);
+      Game.layout(app.game);
+      if (player.hand.cards.length === 0) {
         app.game.state = null;
-        app.game.toggleTurn();
+        Game.toggleTurn(app.game);
       }
       else {
         app.game.state = states.DISCARD;
       }
-      app.game.updateHintArrows();
+      Game.updateHintArrows(app.game);
     }, app.animationTime);
-  };
+  },
 
-  this.drawFromStock = function() {
+  drawFromStock: function(player) {
     if (app.game.stock.length > 0) {
       var card = app.game.stock.pop();
-      this.hand.addCard(card);
+      Hand.addCard(player.hand, card);
     }
-  };
+  },
 
-  this.drawFromDiscards = function() {
+  drawFromDiscards: function(player) {
     if (app.game.discards.length > 0) {
       var card = app.game.discards.pop();
-      this.hand.addCard(card);
+      Hand.addCard(player.hand, card);
     }
-  };
+  },
 
-  this.discard = function(card) {
+  discard: function(player, card) {
     app.game.state = null;
     var playerIndex;
     if (app.game.computerTurn) {
@@ -106,18 +109,18 @@ function Player(isComputer) {
       playerIndex = 0;
     }
 
-    var placeInHand = this.hand.indexOf(card.suit, card.numericRank);
+    var placeInHand = Hand.indexOf(player.hand, card.suit, card.numericRank);
 
     if (placeInHand >= 0) {
-      this.hand.cards.splice(placeInHand, 1);
+      player.hand.cards.splice(placeInHand, 1);
       app.game.discards.push(card);
-      card.show();
+      Card.show(card);
       app.game.state = null;
-      app.game.updateHintArrows();
-      app.game.toggleTurn();
+      Game.updateHintArrows(app.game);
+      Game.toggleTurn(app.game);
     }
     else {
       app.game.state = states.DISCARD;
     }
-  };
-}
+  }
+};

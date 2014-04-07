@@ -1,41 +1,9 @@
-/* global Modernizr, console, app, domMap */
+/* global Modernizr, app, domMap, Deck */
 /* exported Card */
 
-function Card(newSuit, newValue) {
-  this.type = 'Card';
-  this.rank = newValue;
-  this.suit = newSuit;
-  this.x = 0;
-  this.y = 0;
-  this.rotation = 0;
-  this.scale = 1;
-  this.z = 1;
-
-  var domElement = domMap[this.rank + '_' + this.suit];
-
-  domElement.addEventListener('click', function() {
-    var cardClickedEvent = document.createEvent('UIEvents');
-    cardClickedEvent.initEvent('cardClicked', true, true);
-    var suit, rank;
-    var classArray = this.className.split(' ');
-    for (var i = 0; i < classArray.length; i++) {
-      if (
-        classArray[i] === 'heart' ||
-        classArray[i] === 'club' ||
-        classArray[i] === 'diamond' ||
-        classArray[i] === 'spade'
-      ) {
-        suit = classArray[i];
-      } else if (classArray[i].charAt(0) === '_') {
-        rank = classArray[i].substr(1);
-      }
-    }
-    cardClickedEvent.card = app.game.deck.getCard(suit, rank);
-    document.dispatchEvent(cardClickedEvent);
-  });
-
-  this.findNumericRank = function() {
-    switch (this.rank) {
+var Card = {
+  findNumericRank: function(card) {
+    switch (card.rank) {
       case 'A':
         return 1;
       case 'J':
@@ -45,16 +13,16 @@ function Card(newSuit, newValue) {
       case 'K':
         return 13;
       default:
-        return parseInt(this.rank);
+        return parseInt(card.rank);
     }
-  };
+  },
 
-  this.updateLayout = function(x, y, rotation, scale) {
-    if (x !== this.x || y !== this.y || rotation !== this.rotation || scale !== this.scale) {
-      this.x = x;
-      this.y = y;
-      this.rotation = rotation;
-      this.scale = scale;
+  updateLayout: function(card, x, y, rotation, scale) {
+    if (x !== card.x || y !== card.y || rotation !== card.rotation || scale !== card.scale) {
+      card.x = x;
+      card.y = y;
+      card.rotation = rotation;
+      card.scale = scale;
 
       var transformDefinition = 'translateX(' + x + 'px) translateY(' + y + 'px) translateZ(1px)';
       if (rotation !== undefined && rotation !== 0) {
@@ -63,51 +31,97 @@ function Card(newSuit, newValue) {
       if (scale !== undefined && scale !== 1) {
         transformDefinition += ' scale(' + scale + ')';
       }
-      domMap[this.rank + '_' + this.suit].style[Modernizr.prefixed('transform')] = transformDefinition;
+      domMap[card.rank + '_' + card.suit].style[Modernizr.prefixed('transform')] = transformDefinition;
     }
-  };
+  },
 
-  this.setZ = function(z) {
-    if (z !== this.z) {
-      this.z = z;
-      domMap[this.rank + '_' + this.suit].style[Modernizr.prefixed('zIndex')] = z;
+  setZ: function(card, z) {
+    if (z !== card.z) {
+      card.z = z;
+      domMap[card.rank + '_' + card.suit].style[Modernizr.prefixed('zIndex')] = z;
     }
-  };
+  },
 
-  this.show = function() {
-    this.removeCustomClass('hidden');
-  };
+  show: function(card) {
+    Card.removeCustomClass(card, 'hidden');
+  },
 
-  this.hide = function() {
-    this.addCustomClass('hidden');
-  };
+  hide: function(card) {
+    Card.addCustomClass(card, 'hidden');
+  },
 
-  this.log = function() {
-    console.log(this.rank + '\t' + this.suit);
-  };
+  setPlayerHand: function(card) {
+    Card.addCustomClass(card, 'playerHand');
+    Card.removeCustomClass(card, 'computerHand');
+  },
 
-  this.setPlayerHand = function() {
-    this.addCustomClass('playerHand');
-    this.removeCustomClass('computerHand');
-  };
+  setComputerHand: function(card) {
+    Card.addCustomClass(card, 'computerHand');
+    Card.removeCustomClass(card, 'playerHand');
+  },
 
-  this.setComputerHand = function() {
-    this.addCustomClass('computerHand');
-    this.removeCustomClass('playerHand');
-  };
+  click: function(card) {
+    domMap[card.rank + '_' + card.suit].click();
+  },
 
-  this.click = function() {
-    domMap[this.rank + '_' + this.suit].click();
-  };
+  addCustomClass: function(card, theClass) {
+    domMap[card.rank + '_' + card.suit].classList.add(theClass);
+  },
 
-  this.addCustomClass = function(theClass) {
-    domMap[this.rank + '_' + this.suit].classList.add(theClass);
-  };
+  removeCustomClass: function(card, theClass) {
+    domMap[card.rank + '_' + card.suit].classList.remove(theClass);
+  },
 
-  this.removeCustomClass = function(theClass) {
-    domMap[this.rank + '_' + this.suit].classList.remove(theClass);
-  };
+  addClickListener: function(card) {
+    domMap[card.rank + '_' + card.suit].addEventListener('click', function() {
+      var cardClickedEvent = document.createEvent('UIEvents');
+      cardClickedEvent.initEvent('cardClicked', true, true);
+      var suit, rank;
+      var classArray = this.className.split(' ');
+      for (var i = 0; i < classArray.length; i++) {
+        if (
+          classArray[i] === 'heart' ||
+          classArray[i] === 'club' ||
+          classArray[i] === 'diamond' ||
+          classArray[i] === 'spade'
+        ) {
+          suit = classArray[i];
+        } else if (classArray[i].charAt(0) === '_') {
+          rank = classArray[i].substr(1);
+        }
+      }
+      cardClickedEvent.card = Deck.getCard(app.game.deck, suit, rank);
+      document.dispatchEvent(cardClickedEvent);
+    });
+  },
 
-  this.numericRank = this.findNumericRank();
-  this.hide();
-}
+  createCard: function(newSuit, newValue) {
+    var result = {
+      rank: newValue,
+      suit: newSuit,
+      x: 0,
+      y: 0,
+      rotation: 0,
+      scale: 1,
+      z: 1,
+      numericRank: 0
+    };
+
+    result.numericRank = Card.findNumericRank(result);
+
+    Card.addClickListener(result);
+    Card.hide(result);
+
+    return result;
+  },
+
+  cleanCardsCache: function(cards) {
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].x = 0;
+      cards[i].y = 0;
+      cards[i].z = 0;
+      cards[i].scale = 0;
+      cards[i].rotation = 0;
+    }
+  }
+};

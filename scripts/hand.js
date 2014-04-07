@@ -1,30 +1,35 @@
-/* global app */
+/* global app, Card */
 /* exported Hand */
 
-function Hand(cards, computer) {
-  this.type = 'Hand';
-  this.cards = cards;
-  this.isComputer = computer;
-  this.isPretend = false; // When testing for valid melds, we create some pretend hands
+var Hand = {
+  createHand: function(cards, computer) {
+    var result = {
+      cards: cards,
+      isComputer: computer,
+      isPretend: false // When testing for valid melds, we create some pretend hands
+    };
 
-  this.getScore = function() {
+    return result;
+  },
+
+  getScore: function(hand) {
     var score = 0;
-    for (var cardIndex in this.cards) {
-      if (this.cards[cardIndex].numericRank > 9) {
+    for (var cardIndex in hand.cards) {
+      if (hand.cards[cardIndex].numericRank > 9) {
         score += 10;
       }
       else {
-        score += this.cards[cardIndex].numericRank;
+        score += hand.cards[cardIndex].numericRank;
       }
     }
 
     return score;
-  };
+  },
 
-  this.order = function() {
+  order: function(hand) {
     // order by rank
-    if (Array.isArray(this.cards)) {
-      this.cards.sort(function(a, b) {
+    if (Array.isArray(hand.cards)) {
+      hand.cards.sort(function(a, b) {
         if (a.numericRank > b.numericRank) {
           return 1;
         }
@@ -36,10 +41,10 @@ function Hand(cards, computer) {
         }
       });
     }
-  };
+  },
 
-  this.layout = function() {
-    var isOdd = (this.cards.length & 1) === 1;
+  layout: function(hand) {
+    var isOdd = (hand.cards.length & 1) === 1;
     var ANGLE_BETWEEN_CARDS = 3;
     var cardsOnEachSide;
     var xValue;
@@ -48,9 +53,9 @@ function Hand(cards, computer) {
     var curZindex = 10;
 
     if (isOdd) {
-      cardsOnEachSide = (this.cards.length - 1) / 2;
+      cardsOnEachSide = (hand.cards.length - 1) / 2;
 
-      if (this.isComputer) {
+      if (hand.isComputer) {
         angle = ANGLE_BETWEEN_CARDS * cardsOnEachSide;
       }
       else {
@@ -58,9 +63,9 @@ function Hand(cards, computer) {
       }
     }
     else {
-      cardsOnEachSide = (this.cards.length) / 2;
+      cardsOnEachSide = (hand.cards.length) / 2;
 
-      if (this.isComputer) {
+      if (hand.isComputer) {
         angle = ANGLE_BETWEEN_CARDS * cardsOnEachSide - (ANGLE_BETWEEN_CARDS / 2);
       }
       else {
@@ -70,59 +75,59 @@ function Hand(cards, computer) {
 
     xValue = (app.screenWidth * app.handsCenteredOn)  - (app.cardWidth / 2); // Find starting point
 
-    if (this.isComputer) {
+    if (hand.isComputer) {
       yValue = app.opponentY;
     }
     else {
       yValue = app.playerY;
     }
 
-    for (var i = 0; i < this.cards.length; i++) {
-      this.cards[i].updateLayout(xValue, yValue, angle);
+    for (var i = 0; i < hand.cards.length; i++) {
+      Card.updateLayout(hand.cards[i], xValue, yValue, angle);
 
-      if (this.isComputer) {
+      if (hand.isComputer) {
         angle -= ANGLE_BETWEEN_CARDS;
-        this.cards[i].hide();
-        this.cards[i].setComputerHand();
+        Card.hide(hand.cards[i]);
+        Card.setComputerHand(hand.cards[i]);
       }
       else {
         angle += ANGLE_BETWEEN_CARDS;
-        this.cards[i].show();
-        this.cards[i].setPlayerHand();
+        Card.show(hand.cards[i]);
+        Card.setPlayerHand(hand.cards[i]);
       }
 
-      this.cards[i].setZ(curZindex++);
+      Card.setZ(hand.cards[i], curZindex++);
     }
-  };
+  },
 
-  this.layDownMelds = function() {
-    var setLayedDown = this.layDownSets();
-    var runLayedDown = this.layDownRuns();
+  layDownMelds: function(hand) {
+    var setLayedDown = Hand.layDownSets(hand);
+    var runLayedDown = Hand.layDownRuns(hand);
     var additions = false;
-    while (this.layDownAdditions()) {
+    while (Hand.layDownAdditions(hand)) {
       additions = true;
     }
 
     return setLayedDown || runLayedDown || additions;
-  };
+  },
 
-  this.layDownAdditions = function() {
+  layDownAdditions: function(hand) {
     var result = false;
 
     var isSetMeld = function(meld) {
       return meld[0].numericRank === meld[1].numericRank;
     };
 
-    for (var cardIndex = 0; cardIndex < this.cards.length; cardIndex++) {
+    for (var cardIndex = 0; cardIndex < hand.cards.length; cardIndex++) {
       for (var meldIndex in app.game.melds) {
-        var card = this.cards[cardIndex];
+        var card = hand.cards[cardIndex];
         var meld = app.game.melds[meldIndex];
         var removed = false;
 
         if (isSetMeld(meld)) {
           if (card.numericRank === meld[0].numericRank) {
             removed = true;
-            if (!this.isPretend) {
+            if (!hand.isPretend) {
               meld.push(card);
             }
           }
@@ -135,7 +140,7 @@ function Hand(cards, computer) {
             }
             else if (meld[meld.length - 1].numericRank + 1 === card.numericRank) {
               removed = true;
-              if (!this.isPretend) {
+              if (!hand.isPretend) {
                 meld.push(card);
               }
             }
@@ -143,7 +148,7 @@ function Hand(cards, computer) {
         }
 
         if (removed) {
-          this.cards.splice(cardIndex, 1);
+          hand.cards.splice(cardIndex, 1);
           cardIndex--;
           result = true;
           break;
@@ -152,52 +157,52 @@ function Hand(cards, computer) {
     }
 
     return result;
-  };
+  },
 
-  this.getSetLength = function(startIndex) {
+  getSetLength: function(hand, startIndex) {
     var length = 1;
     var currentIndex = startIndex + 1;
-    while (currentIndex < this.cards.length && this.cards[currentIndex].rank === this.cards[startIndex].rank) {
+    while (currentIndex < hand.cards.length && hand.cards[currentIndex].rank === hand.cards[startIndex].rank) {
       length++;
       currentIndex++;
     }
 
     return length;
-  };
+  },
 
-  this.indexOf = function(suit, numericRank) {
-    for (var i = 0; i < this.cards.length; i++) {
-      if (this.cards[i].suit === suit && this.cards[i].numericRank === numericRank) {
+  indexOf: function(hand, suit, numericRank) {
+    for (var i = 0; i < hand.cards.length; i++) {
+      if (hand.cards[i].suit === suit && hand.cards[i].numericRank === numericRank) {
         return i;
       }
     }
 
     return -1;
-  };
+  },
 
-  this.cardIsPartOfRun = function(index) {
+  cardIsPartOfRun: function(hand, index) {
     var result = [];
 
     var offset = 1;
-    var theCard = this.cards[index];
+    var theCard = hand.cards[index];
 
     var place = index;
 
     do {
       result.push(place);
-      place = this.indexOf(theCard.suit, theCard.numericRank + offset);
+      place = Hand.indexOf(hand, theCard.suit, theCard.numericRank + offset);
       offset++;
     } while (place >= 0);
 
     return result;
-  };
+  },
 
-  this.getPotentialRuns = function(index) {
+  getPotentialRuns: function(hand, index) {
     var result = [index];
-    var theCard = this.cards[index];
+    var theCard = hand.cards[index];
 
-    var downward = this.indexOf(theCard.suit, theCard.numericRank - 1);
-    var upward = this.indexOf(theCard.suit, theCard.numericRank + 1);
+    var downward = Hand.indexOf(hand, theCard.suit, theCard.numericRank - 1);
+    var upward = Hand.indexOf(hand, theCard.suit, theCard.numericRank + 1);
     if (downward >= 0) {
       result.unshift(downward);
     }
@@ -206,27 +211,27 @@ function Hand(cards, computer) {
     }
 
     return result;
-  };
+  },
 
-  this.getPotentialSets = function(index) {
+  getPotentialSets: function(hand, index) {
     var result = [];
-    var theCard = this.cards[index];
+    var theCard = hand.cards[index];
 
-    for (var i = 0; i < this.cards.length; i++) {
-      if (this.cards[i].numericRank === theCard.numericRank) {
+    for (var i = 0; i < hand.cards.length; i++) {
+      if (hand.cards[i].numericRank === theCard.numericRank) {
         result.push(i);
       }
     }
 
     return result;
-  };
+  },
 
-  this.getPotentialNonContRuns = function(index) {
+  getPotentialNonContRuns: function(hand, index) {
     var result = [index];
-    var theCard = this.cards[index];
+    var theCard = hand.cards[index];
 
-    var downward = this.indexOf(theCard.suit, theCard.numericRank - 2);
-    var upward = this.indexOf(theCard.suit, theCard.numericRank + 2);
+    var downward = Hand.indexOf(hand, theCard.suit, theCard.numericRank - 2);
+    var upward = Hand.indexOf(hand, theCard.suit, theCard.numericRank + 2);
     if (downward >= 0) {
       result.unshift(downward);
     }
@@ -235,83 +240,83 @@ function Hand(cards, computer) {
     }
 
     return result;
-  };
+  },
 
-  this.layDownSets = function() {
+  layDownSets: function(hand) {
     var result = false;
 
     // look at each card
-    for (var i = 0; i < this.cards.length; i++) {
-      var length = this.getSetLength(i);
+    for (var i = 0; i < hand.cards.length; i++) {
+      var length = Hand.getSetLength(hand, i);
       if (length > 2) {
-        var removed = this.cards.splice(i, length);
-        this.layDownMeld(removed);
+        var removed = hand.cards.splice(i, length);
+        Hand.layDownMeld(hand, removed);
         result = true;
       }
     }
 
     return result;
-  };
+  },
 
-  this.layDownRuns = function() {
+  layDownRuns: function(hand) {
     var result = false;
 
     // look at each card
-    for (var i = 0; i < this.cards.length; i++) {
-      var run = this.cardIsPartOfRun(i);
+    for (var i = 0; i < hand.cards.length; i++) {
+      var run = Hand.cardIsPartOfRun(hand, i);
 
       if (run.length > 2) {
         var removed = [];
         for (var runCardIndex = run.length - 1; runCardIndex >= 0; runCardIndex--) {
-          var card = this.cards.splice(run[runCardIndex], 1)[0];
+          var card = hand.cards.splice(run[runCardIndex], 1)[0];
           removed.unshift(card);
         }
-        this.layDownMeld(removed);
+        Hand.layDownMeld(hand, removed);
         result = true;
       }
     }
 
     return result;
-  };
+  },
 
-  this.layDownMeld = function(cardsToLayDown) {
-    if (!this.isPretend) {
+  layDownMeld: function(hand, cardsToLayDown) {
+    if (!hand.isPretend) {
       app.game.melds.push(cardsToLayDown);
     }
-  };
+  },
 
-  this.addCard = function(card) {
-    this.cards.push(card);
-    this.order();
-  };
+  addCard: function(hand, card) {
+    hand.cards.push(card);
+    Hand.order(hand);
+  },
 
-  this.hasThisNumberCard = function(card) {
-    return this.indexOf('heart', card.numericRank) >= 0 ||
-      this.indexOf('diamond', card.numericRank) >= 0 ||
-      this.indexOf('club', card.numericRank) >= 0 ||
-      this.indexOf('spade', card.numericRank) >= 0;
-  };
+  hasThisNumberCard: function(hand, card) {
+    return Hand.indexOf(hand, 'heart', card.numericRank) >= 0 ||
+      Hand.indexOf(hand, 'diamond', card.numericRank) >= 0 ||
+      Hand.indexOf(hand, 'club', card.numericRank) >= 0 ||
+      Hand.indexOf(hand, 'spade', card.numericRank) >= 0;
+  },
 
-  this.hasCardNearThis = function(card) {
-    return this.indexOf(card.suit, card.numericRank - 1) >= 0 ||
-      this.indexOf(card.suit, card.numericRank + 1) >= 0;
-  };
+  hasCardNearThis: function(hand, card) {
+    return Hand.indexOf(hand, card.suit, card.numericRank - 1) >= 0 ||
+      Hand.indexOf(hand, card.suit, card.numericRank + 1) >= 0;
+  },
 
-  this.wouldResultInMeld = function(card) {
+  wouldResultInMeld: function(hand, card) {
     // Make new fake hand with the card added
-    var fakeHand = new Hand(this.cards.concat([card]));
+    var fakeHand = Hand.createHand(hand.cards.concat([card]));
     fakeHand.isPretend = true;
-    fakeHand.order();
-    var result = fakeHand.layDownMelds();
+    Hand.order(fakeHand);
+    var result = Hand.layDownMelds(fakeHand);
     fakeHand = null;
     return result;
-  };
+  },
 
-  this.getWorth = function(index) {
+  getWorth: function(hand, index) {
     var lookingFor = [];
     var worth = 0;
     var candidates = 0;
-    var theCard = this.cards[index];
+    var theCard = hand.cards[index];
 
     var updateCandidateBasedOnUsed = function(candidates, cardsLookingFor) {
       var newCandidates = candidates;
@@ -349,9 +354,9 @@ function Hand(cards, computer) {
       return newCandidates;
     };
 
-    var setCards = this.getPotentialSets(index);
-    var runCards = this.getPotentialRuns(index);
-    var ncRunCards = this.getPotentialNonContRuns(index);
+    var setCards = Hand.getPotentialSets(hand, index);
+    var runCards = Hand.getPotentialRuns(hand, index);
+    var ncRunCards = Hand.getPotentialNonContRuns(hand, index);
 
     if (setCards.length > 1) {
       candidates += 2;
@@ -370,12 +375,12 @@ function Hand(cards, computer) {
       // Look for unavailable cards at either end of run
       lookingFor.concat([
         {
-          suit: this.cards[runCards[0]].suit,
-          numericRank: this.cards[runCards[0]].numericRank - 1
+          suit: hand.cards[runCards[0]].suit,
+          numericRank: hand.cards[runCards[0]].numericRank - 1
         },
         {
-          suit: this.cards[runCards[0]].suit,
-          numericRank: this.cards[runCards[runCards.length - 1]].numericRank + 1
+          suit: hand.cards[runCards[0]].suit,
+          numericRank: hand.cards[runCards[runCards.length - 1]].numericRank + 1
         }
       ]);
     }
@@ -383,8 +388,8 @@ function Hand(cards, computer) {
       candidates += 1;
       lookingFor.concat([
         {
-          suit: this.cards[ncRunCards[0]].suit,
-          numericRank: this.cards[ncRunCards[0]].numericRank + 1
+          suit: hand.cards[ncRunCards[0]].suit,
+          numericRank: hand.cards[ncRunCards[0]].numericRank + 1
         }
       ]);
     }
@@ -392,17 +397,17 @@ function Hand(cards, computer) {
     worth = candidates / 52;
 
     return worth;
-  };
+  },
 
-  this.chooseDiscard = function() {
+  chooseDiscard: function(hand) {
     var lowestWorth = Number.MAX_VALUE;
-    var leastValueableIndex = this.cards.length - 1;
-    for (var cardIndex = this.cards.length - 1; cardIndex >= 0; cardIndex--) {
-      var thisWorth = this.getWorth(cardIndex);
+    var leastValueableIndex = hand.cards.length - 1;
+    for (var cardIndex = hand.cards.length - 1; cardIndex >= 0; cardIndex--) {
+      var thisWorth = Hand.getWorth(hand, cardIndex);
 
       // short circuit on first card with a worth of 0
       if (thisWorth === 0) {
-        return this.cards[cardIndex];
+        return hand.cards[cardIndex];
       }
 
       // Otherwise see if there has been a card worth less
@@ -412,16 +417,16 @@ function Hand(cards, computer) {
       }
     }
 
-    return this.cards[leastValueableIndex];
-  };
+    return hand.cards[leastValueableIndex];
+  },
 
-  this.empty = function() {
-    this.cards = [];
-  };
+  empty: function(hand) {
+    hand.cards = [];
+  },
 
-  this.show = function() {
-    for (var cardIndex in this.cards) {
-      this.cards[cardIndex].show();
+  show: function(hand) {
+    for (var cardIndex in hand.cards) {
+      Card.show(hand.cards[cardIndex]);
     }
-  };
-}
+  }
+};

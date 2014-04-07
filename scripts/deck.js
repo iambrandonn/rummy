@@ -1,23 +1,20 @@
 /* global Card */
 /* exported Deck */
 
-function Deck() {
-  this.type = 'Deck';
-  this.cards =  [];
-
-  this.getCard = function(suit, rank) {
-    for (var i = 0; i < this.cards.length; i++) {
-      if (this.cards[i].suit === suit && this.cards[i].rank === rank) {
-        return this.cards[i];
+var Deck = {
+  getCard: function(deck, suit, rank) {
+    for (var i = 0; i < deck.cards.length; i++) {
+      if (deck.cards[i].suit === suit && deck.cards[i].rank === rank) {
+        return deck.cards[i];
       }
     }
-  };
+  },
 
-  this.shuffle = function() {
-    this.cards = this.shuffleArray(this.cards);
-  };
+  shuffle: function(deck) {
+    deck.cards = Deck.shuffleArray(deck.cards);
+  },
 
-  this.shuffleArray = function (toShuffle) {
+  shuffleArray: function (toShuffle) {
     // Make a copy of the array that we can pull items from
     var arrayCopy = toShuffle.slice(0);
 
@@ -53,38 +50,46 @@ function Deck() {
     }
 
     return newArray;
-  };
+  },
 
-  for (var suit = 0; suit <= 3; suit++) {
-    var suitValue;
-    switch (suit) {
-      case 0:
-        suitValue = 'club';
-        break;
-      case 1:
-        suitValue = 'spade';
-        break;
-      case 2:
-        suitValue = 'heart';
-        break;
-      case 3:
-        suitValue = 'diamond';
-        break;
+  createDeck: function() {
+    var result = {
+      cards: []
+    };
+
+    for (var suit = 0; suit <= 3; suit++) {
+      var suitValue;
+      switch (suit) {
+        case 0:
+          suitValue = 'club';
+          break;
+        case 1:
+          suitValue = 'spade';
+          break;
+        case 2:
+          suitValue = 'heart';
+          break;
+        case 3:
+          suitValue = 'diamond';
+          break;
+      }
+      result.cards.push(Card.createCard(suitValue, 'A'));
+      result.cards.push(Card.createCard(suitValue, '2'));
+      result.cards.push(Card.createCard(suitValue, '3'));
+      result.cards.push(Card.createCard(suitValue, '4'));
+      result.cards.push(Card.createCard(suitValue, '5'));
+      result.cards.push(Card.createCard(suitValue, '6'));
+      result.cards.push(Card.createCard(suitValue, '7'));
+      result.cards.push(Card.createCard(suitValue, '8'));
+      result.cards.push(Card.createCard(suitValue, '9'));
+      result.cards.push(Card.createCard(suitValue, '10'));
+      result.cards.push(Card.createCard(suitValue, 'J'));
+      result.cards.push(Card.createCard(suitValue, 'Q'));
+      result.cards.push(Card.createCard(suitValue, 'K'));
     }
-    this.cards.push(new Card(suitValue, 'A'));
-    this.cards.push(new Card(suitValue, '2'));
-    this.cards.push(new Card(suitValue, '3'));
-    this.cards.push(new Card(suitValue, '4'));
-    this.cards.push(new Card(suitValue, '5'));
-    this.cards.push(new Card(suitValue, '6'));
-    this.cards.push(new Card(suitValue, '7'));
-    this.cards.push(new Card(suitValue, '8'));
-    this.cards.push(new Card(suitValue, '9'));
-    this.cards.push(new Card(suitValue, '10'));
-    this.cards.push(new Card(suitValue, 'J'));
-    this.cards.push(new Card(suitValue, 'Q'));
-    this.cards.push(new Card(suitValue, 'K'));
-  }
 
-  this.shuffle();
-}
+    Deck.shuffle(result);
+
+    return result;
+  }
+};
