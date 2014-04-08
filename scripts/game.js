@@ -16,6 +16,7 @@ var Game = {
     app.opponentY += 125;
     Game.layout(app.game);
     Hand.show(app.players[1].hand);
+    App.saveState();
 
     if (app.players[0].score >= 100 || app.players[1].score >= 100) {
       App.showWinnerModal();
@@ -40,6 +41,7 @@ var Game = {
     game.stock = game.deck.cards.slice(0);
 
     setTimeout(function() {
+      App.saveState();
       Game.deal(app.game);
     }, app.animationTime);
 
@@ -48,8 +50,6 @@ var Game = {
   },
 
   toggleTurn: function(game) {
-    App.saveState();
-    
     setTimeout(function() {
       game.computerTurn = !game.computerTurn;
 
@@ -66,6 +66,7 @@ var Game = {
           Game.updateHintArrows(game);
         }
       }
+      App.saveState();
     }, app.animationTime);
   },
 
@@ -123,6 +124,8 @@ var Game = {
       setTimeout(function() {
         // Turn over the card
         Card.show(app.game.discards[0]);
+
+        App.saveState();
 
         // Start the game
         Game.start(app.game);
@@ -212,6 +215,7 @@ var Game = {
         0
       );
       Card.setZ(game.discards[i], zIndex++);
+      Card.show(game.discards[i]);
     }
   },
 

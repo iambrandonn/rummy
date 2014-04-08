@@ -2,6 +2,10 @@
 /* exported Card */
 
 var Card = {
+  equals: function(card1, card2) {
+    return card1.rank === card2.rank && card1.suit === card2.suit;
+  },
+
   findNumericRank: function(card) {
     switch (card.rank) {
       case 'A':

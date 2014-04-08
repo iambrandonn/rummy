@@ -1,4 +1,4 @@
-/* globals app, states, Card, Game, Hand */
+/* globals app, states, Card, Game, Hand, App */
 /* exported Player */
 
 var Player = {
@@ -58,10 +58,10 @@ var Player = {
 
   draw: function(player, card) {
     app.game.state = null;
-    if (card === app.game.discards[app.game.discards.length - 1]) {
+    if (Card.equals(card, app.game.discards[app.game.discards.length - 1])) {
       Player.drawFromDiscards(player);
     }
-    else if (card === app.game.stock[app.game.stock.length - 1]) {
+    else if (Card.equals(card, app.game.stock[app.game.stock.length - 1])) {
       Player.drawFromStock(player);
     }
     else {
@@ -80,6 +80,7 @@ var Player = {
       }
       else {
         app.game.state = states.DISCARD;
+        App.saveState();
       }
       Game.updateHintArrows(app.game);
     }, app.animationTime);

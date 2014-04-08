@@ -163,6 +163,11 @@ var App = {
 
     if (resuming) {
       Game.layout(app.game);
+      App.updateScoreDOM();
+      Game.updateHintArrows(app.game);
+      if (app.players[0].hand.cards.length === 0 || app.players[1].hand.cards.length === 0) {
+        Game.nextHand(app.game);
+      }
     }
     else {
       Game.deal(app.game);
@@ -240,7 +245,8 @@ var App = {
       app.game.discardArrowX = 0;
       app.game.discardArrowY = 0;
       app.game.computerTurn = false;
-      app.game.state = states.DRAW;
+
+      app.handsCenteredOn = 0;
 
       return true;
     }
