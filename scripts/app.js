@@ -148,6 +148,16 @@ var App = {
       App.restartGame();
     });
 
+    var restartButton = document.querySelectorAll('#restartButton')[0];
+    restartButton.addEventListener('click', function() {
+      App.restartGame();
+    });
+
+    var helpButton = document.querySelectorAll('#helpButton')[0];
+    helpButton.addEventListener('click', function() {
+      alert('help me rhonda! and restart layout wrong!');
+    });
+
     // Set up fastclick for mobile devices
     window.addEventListener('load', function() {
       FastClick.attach(document.body);

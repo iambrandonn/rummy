@@ -206,3 +206,28 @@ body {
 .preload {
   transition: all 0s linear !important;
 }
+
+.restart-button, .help-button {
+  position: absolute;
+  color: #9E9E9E;
+  transition: color .2s linear;
+  cursor: pointer;
+}
+
+.restart-button:hover, .help-button:hover {
+  color: white;
+}
+
+.restart-button{
+  top: 10px;
+  right: 42px;
+  font-size: 24px;
+}
+
+.help-button {
+  top: 10px;
+  right: 11px;  
+  font-family: Arial;
+  font-size: 34px;
+  margin-top: -6px;
+}
