@@ -210,11 +210,12 @@ body {
 .restart-button, .help-button {
   position: absolute;
   color: #9E9E9E;
-  transition: color .2s linear;
   cursor: pointer;
+  transition: color .2s linear;
 }
 
 .restart-button:hover, .help-button:hover {
+  transition: color 0s linear;
   color: white;
 }
 

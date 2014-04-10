@@ -115,6 +115,7 @@ var Card = {
 
     Card.addClickListener(result);
     Card.hide(result);
+    Card.removeCustomClass(result, 'meld');
 
     return result;
   },
