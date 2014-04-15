@@ -2,7 +2,7 @@
   background-color: #000;
   position: absolute;
   top: 50%;
-  right: 2%;
+  right: 20px;
   margin-top: -300px;
 }
 
@@ -212,23 +212,48 @@ body {
   color: #9E9E9E;
   cursor: pointer;
   transition: color .2s linear;
+  border: 1px solid #9E9E9E;
+  border-radius: 25px;
+  padding: 7px;
+  height: 23px;
+  width: 23px;
 }
 
 .restart-button:hover, .help-button:hover {
   transition: color 0s linear;
   color: white;
+  border: 1px solid white;
 }
 
 .restart-button{
   top: 10px;
-  right: 42px;
+  right: 65px;
   font-size: 24px;
 }
 
 .help-button {
   top: 10px;
-  right: 11px;  
+  right: 20px;
   font-family: Arial;
   font-size: 34px;
-  margin-top: -6px;
+  padding-top: 0;
+  padding: 0 4px 14px 9px;
+}
+
+.instructions {
+  font-size: 16px;
+  padding: 20px 30px;
+  top: 6%;
+  font-weight: normal;
+  width: 60%;
+}
+
+.feedback {
+  text-align: center;
+  padding: 22px 0 10px 0;
+}
+
+.feedback a {
+  color: #8CF;
+  text-decoration: none;
 }

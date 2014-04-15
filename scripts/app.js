@@ -155,7 +155,12 @@ var App = {
 
     var helpButton = document.querySelectorAll('#helpButton')[0];
     helpButton.addEventListener('click', function() {
-      alert('help me rhonda! and restart layout wrong!');
+      App.showInstructionModal();
+    });
+
+    var doneWithInstructionsButton = document.querySelectorAll('#instructionModal > .button')[0];
+    doneWithInstructionsButton.addEventListener('click', function() {
+      App.hideInstructionModal();
     });
 
     // Set up fastclick for mobile devices
@@ -197,6 +202,14 @@ var App = {
   hideModal: function(id) {
     var modal = document.querySelectorAll('#' + id)[0];
     modal.style[Modernizr.prefixed('transform')] = 'translateX(-201%) translateZ(2px)';
+  },
+
+  showInstructionModal: function() {
+    App.showModal('instructionModal');
+  },
+
+  hideInstructionModal: function() {
+    App.hideModal('instructionModal');
   },
 
   showContinueModal: function() {
