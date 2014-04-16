@@ -230,6 +230,18 @@ var App = {
     document.querySelectorAll('#continueYourScore')[0].textContent = app.players[0].score;
     document.querySelectorAll('#continueOpponentScore')[0].textContent = app.players[1].score;
 
+    var bestScore = App.getBestScore();
+    var bestScoreElement = document.querySelectorAll('#bestScore')[0];
+    if (bestScore === 0) {
+      bestScoreElement.classList.add('hide');
+    }
+    else {
+      bestScoreElement.classList.remove('hide');
+
+      var scoreValueElement = document.querySelectorAll('#bestScore #scoreValue')[0];
+      scoreValueElement.textContent = bestScore;
+    }
+
     App.showModal('continueModal');
   },
 
@@ -290,6 +302,18 @@ var App = {
     else {
       return false;
     }
+  },
+
+  getBestScore: function() {
+    var score = localStorage.getItem('bestScore');
+    if (score === null) {
+      score = 0;
+    }
+
+    return score;
+  },
+  setBestScore: function(value) {
+    localStorage.setItem('bestScore', value);
   }
 };
 

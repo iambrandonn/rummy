@@ -248,6 +248,18 @@ body {
   width: 60%;
 }
 
+.instructions p {
+  margin-left: 15px;
+}
+
+.instructionHeading {
+  font-weight: bold;
+}
+
+.scoreCategory {
+  margin-left: 15px;
+}
+
 .feedback {
   text-align: center;
   padding: 22px 0 10px 0;
@@ -256,4 +268,8 @@ body {
 .feedback a {
   color: #8CF;
   text-decoration: none;
+}
+
+.hide {
+  display: none;
 }

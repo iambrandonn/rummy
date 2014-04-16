@@ -19,6 +19,11 @@ var Game = {
     App.saveState();
 
     if (app.players[0].score >= 100 || app.players[1].score >= 100) {
+      var bestScore = App.getBestScore();
+      if (app.players[0].score < bestScore) {
+        App.setBestScore(app.players[0].score);
+      }
+
       App.showWinnerModal();
     }
     else {

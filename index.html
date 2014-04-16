@@ -67,42 +67,21 @@
     <div class="help-button" title="Instructions" id="helpButton">?</div>
 
     <div class="modal instructions" id="instructionModal">
-      <p>
-        Your goal is to get rid of all your cards before your opponent does.
-      </p>
-      <p>
-        You get rid of cards by forming a "set" or a "run".
-      </p>
-      <p>
-        A set is 3 or more cards that are the same rank.  
-      </p>
-      <p>
-        Example: (6 of spades, 6 of hearts, and 6 of diamonds)
-      </p>
-      <p>      
-        A run is 3 or more cards of the same suit that are ordered with no gaps.  
-      </p>
-      <p>
-        Example: (9 of hearts, 10 of hearts, Jack of hearts)
-      </p>
-      <p>
-        When you have a set or run in your hand it will be taken from your hand and laid down on the table automatically.
-      </p>
-      <p>
-        Either player can then add to the sets or runs which have already been laid down.
-      </p>
-      <p>  
-        Once a player has laid down all of their cards, the other player's cards are scored.
-      </p>
-      <p>
-          Scoring:
-          Face cards: 10 points
-          Aces: 1 point
-          All others: face value (3 = 3 point, 7 = 7 points, etc.)
-      </p>
-      <p>
-        Hands are continued to be dealt until one of the players reaches 100 points, at which point they lose the game.
-      </p>
+      <div class="instructionHeading">Goal:</div>
+      <p>Get rid of all your cards before your opponent does.</p>
+      <p>You get rid of cards by forming a "set" or a "run".</p>
+      <p>A set is 3 or more cards that are the same rank.</p>
+      <p>Example: (6 of spades, 6 of hearts, and 6 of diamonds)</p>
+      <p>A run is 3 or more cards of the same suit that are ordered with no gaps.</p>
+      <p>Example: (9 of hearts, 10 of hearts, Jack of hearts)</p>
+      <p>When you have a set or run in your hand it will be taken from your hand and laid down on the table automatically.</p>
+      <p>Either player can then add to the sets or runs which have already been laid down.</p>
+      <p>Once a player has laid down all of their cards, the other player's cards are scored.</p>
+      <div class="instructionHeading">Scoring:</div>
+      <div class="scoreCategory">Face cards: 10 points</div>
+      <div class="scoreCategory">Aces: 1 point</div>
+      <div class="scoreCategory">All others: face value (3 = 3 point, 7 = 7 points, etc.)</div>
+      <p>Hands are continued to be dealt until one of the players reaches 100 points, at which point they lose the game.</p>
       <input class="button" type="button" value="Done" />
       <div class="feedback">
         Please send feedback to <a href="mailto:rummyfox@gmail.com">rummyfox@gmail.com</a>
@@ -142,6 +121,10 @@
       </div>
 
       <div class="tip">First to 100 loses!</div>
+      <div class="tip hide" id="bestScore">
+        <span>Your best score:</span>
+        <span id="scoreValue"></span>
+      </div>
 
       <input class="button" type="button" value="Continue" />
     </div>
