@@ -25,6 +25,17 @@ var app = {
 };
 
 var App = {
+  warnAboutOldBrowser: function() {
+    // Check for necessities
+    if (!Modernizr.backgroundsize || !Modernizr.csstransforms || !Modernizr.csstransforms3d) {
+      window.alert('You will need a newer browser to play this game.  Try Chrome of Firefox.');
+    }
+
+    // Check for optional
+    if (!Modernizr.csstransitions || !Modernizr.fontface || !Modernizr.generatedcontent || !Modernizr.localstorage) {
+      window.alert('Because you have an older browser, the game may not work as intended.  Try Chrome or Firefox.');
+    }
+  },
   showOrientationWarning: function() {
     document.querySelectorAll('.orientationWarning')[0].style.display = 'block';
     document.querySelectorAll('.orientationWarning')[0].style['z-index'] = '20000';
@@ -99,6 +110,9 @@ var App = {
     }
   },
   init: function() {
+    // Check to make sure browser meets requirements.
+    App.warnAboutOldBrowser();
+
     // The preload class will prevent css transitions while the page is being loaded
     // Once the page is loaded we need to remove it to re-enable the transitions
     App.removePreload();
