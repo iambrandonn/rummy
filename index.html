@@ -4,7 +4,7 @@
     <title>Rummy Fox</title>
     <meta name="viewport" content="user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes"/>
-    <link rel="stylesheet" href="build/app.css" />
+    <link rel="stylesheet" href="styles/all.css" />
   </head>
   <body>
     <div class="card _A spade"></div>
@@ -102,6 +102,10 @@
           <span class="player">You:</span><span class="value" id="winnerYourScore">0</span>
         </div>
       </div>
+      <div class="tip" id="winnerBestScore">
+        <span>Your best score:</span>
+        <span id="winnerScoreValue"></span>
+      </div>
 
       <input class="button" type="button" value="Play Again" />
     </div>
@@ -149,6 +153,18 @@
     (adsbygoogle = window.adsbygoogle || []).push({});
     </script> -->
 
-    <script src="build/app.js"></script>
+    <!-- build:js app.js -->
+    <script type="text/javascript" src="scripts/fastclick.js"></script>
+    <script type="text/javascript" src="scripts/modernizr.js"></script>
+    <script type="text/javascript" src="scripts/resizeend.js"></script>
+    <script type="text/javascript" src="scripts/states.js"></script>
+    <script type="text/javascript" src="scripts/domMap.js"></script>
+    <script type="text/javascript" src="scripts/card.js"></script>
+    <script type="text/javascript" src="scripts/deck.js"></script>
+    <script type="text/javascript" src="scripts/player.js"></script>
+    <script type="text/javascript" src="scripts/hand.js"></script>
+    <script type="text/javascript" src="scripts/game.js"></script>
+    <script type="text/javascript" src="scripts/app.js"></script>
+    <!-- endbuild -->
   </body>
 </html>

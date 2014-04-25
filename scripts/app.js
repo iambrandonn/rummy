@@ -263,6 +263,10 @@ var App = {
     document.querySelectorAll('#winnerYourScore')[0].textContent = app.players[0].score;
     document.querySelectorAll('#winnerOpponentScore')[0].textContent = app.players[1].score;
 
+    var bestScore = App.getBestScore();
+    var scoreValueElement = document.querySelectorAll('#winnerBestScore #winnerScoreValue')[0];
+    scoreValueElement.textContent = bestScore;
+
     App.showModal('winnerModal');
   },
 

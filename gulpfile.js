@@ -4,37 +4,34 @@ var myth = require('gulp-myth');
 var concat = require('gulp-concat');
 var clean = require('gulp-clean');
 var uglify = require('gulp-uglify');
+var useref = require('gulp-useref');
+var filter = require('gulp-filter');
 
 gulp.task('clean', function() {
   return gulp.src('build', {read: false})
     .pipe(clean({force: true}));
 });
 
-gulp.task('styles', function() {
-  return gulp.src('styles/*.css')
+gulp.task('myth', function() {
+  return gulp.src(['styles/*.css', '!styles/all.css'])
     .pipe(myth())
+    .pipe(concat('all.css'))
+    .pipe(gulp.dest('styles'))
     .pipe(cssmin())
-    .pipe(concat('app.css'))
-    .pipe(gulp.dest('build'));
+    .pipe(gulp.dest('build/styles'));
 });
 
-gulp.task('scripts', function() {
-  return gulp.src([
-            'scripts/fastclick.js',
-            'scripts/modernizr.js',
-            'scripts/resizeend.js',
-            'scripts/states.js',
-            'scripts/domMap.js',
-            'scripts/card.js',
-            'scripts/deck.js',
-            'scripts/player.js',
-            'scripts/hand.js',
-            'scripts/game.js',
-            'scripts/app.js'
-          ])
-    .pipe(uglify())
-    .pipe(concat('app.js'))
-    .pipe(gulp.dest('build'));
+gulp.task('html', function () {
+    var jsFilter = filter('**/*.js');
+
+    return gulp.src('index.html')
+        .pipe(useref.assets())
+        .pipe(jsFilter)
+        .pipe(uglify())
+        .pipe(jsFilter.restore())
+        .pipe(useref.restore())
+        .pipe(useref())
+        .pipe(gulp.dest('build'));
 });
 
 gulp.task('fonts', function() {
@@ -42,8 +39,15 @@ gulp.task('fonts', function() {
     .pipe(gulp.dest('build/fonts'));
 });
 
-gulp.watch('scripts/*', ['scripts']);
-gulp.watch('styles/*', ['styles']);
-gulp.watch('fonts/*', ['fonts']);
+gulp.task('images', function() {
+  return gulp.src('images/*')
+    .pipe(gulp.dest('build/images'));
+});
 
-gulp.task('default', ['clean', 'styles', 'scripts', 'fonts']);
+
+gulp.task('default', ['myth'], function() {
+    gulp.watch('styles/*', ['myth']);
+    gulp.watch('fonts/*', ['fonts']);
+});
+
+gulp.task('build', ['clean', 'myth', 'fonts', 'images', 'html']);

@@ -63,6 +63,12 @@ var Game = {
         Game.finishHand();
       }
       else {
+        // Check for empty stock
+        if (game.stock.length === 0) {
+          game.stock = game.discards.splice(1);
+          Game.layout(game);
+        }
+
         if (game.computerTurn) {
           Player.autoPlay(app.players[1]);
         }
@@ -160,6 +166,7 @@ var Game = {
         0
       );
       Card.setZ(app.game.stock[stockIndex], zIndex++);
+      Card.hide(game.stock[stockIndex]);
     }
   },
 
@@ -275,7 +282,7 @@ var Game = {
       stock: [],
       melds: [],
       computerTurn: false,
-      state: null,
+      state: states.DRAW,
       stockArrowX: 0,
       stockArrowY: 0,
       discardArrowX: 0,
