@@ -1,7 +1,7 @@
 {
-  "name": "rummyfox",
+  "name": "rummy",
   "version": "0.0.1",
-  "description": "rummyfox ========",
+  "description": "A free online rummy game",
   "main": "app.js",
   "directories": {
     "test": "test"

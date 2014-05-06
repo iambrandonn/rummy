@@ -36,6 +36,14 @@ var Player = {
   autoPlay: function(player) {
     var layedDown = Hand.layDownMelds(player.hand);
     Game.layout(app.game);
+
+    // Check for winner
+    if (player.hand.cards.length === 0) {
+      app.game.state = null;
+      Game.toggleTurn(app.game);
+      return;
+    }
+
     var delay = layedDown ? app.animationTime : 0;
 
     setTimeout(function() {
