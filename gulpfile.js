@@ -6,6 +6,8 @@ var clean = require('gulp-clean');
 var uglify = require('gulp-uglify');
 var useref = require('gulp-useref');
 var filter = require('gulp-filter');
+var minifyHTML = require('gulp-minify-html');
+var gzip = require('gulp-gzip');
 
 gulp.task('clean', function() {
   return gulp.src('build', {read: false})
@@ -18,6 +20,7 @@ gulp.task('myth', function() {
     .pipe(concat('all.css'))
     .pipe(gulp.dest('styles'))
     .pipe(cssmin())
+    .pipe(gzip({append: false}))
     .pipe(gulp.dest('build/styles'));
 });
 
@@ -31,19 +34,21 @@ gulp.task('html', function () {
         .pipe(jsFilter.restore())
         .pipe(useref.restore())
         .pipe(useref())
+        .pipe(gzip({append: false}))
         .pipe(gulp.dest('build'));
 });
 
 gulp.task('fonts', function() {
   return gulp.src('fonts/*')
+    .pipe(gzip({append: false}))
     .pipe(gulp.dest('build/fonts'));
 });
 
 gulp.task('images', function() {
   return gulp.src('images/*')
+    .pipe(gzip({append: false}))
     .pipe(gulp.dest('build/images'));
 });
-
 
 gulp.task('default', ['myth'], function() {
     gulp.watch('styles/*', ['myth']);

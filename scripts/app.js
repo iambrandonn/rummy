@@ -219,6 +219,13 @@ var App = {
   },
 
   showInstructionModal: function() {
+    // Inject the correct email address onto the page at runtime
+    var emailLink = document.querySelectorAll('#emailAddress')[0];
+
+    // Obfuscated to avoid spam
+    emailLink.href = 'mailto:ce' + 'cese.rummy@gmail.com';
+    emailLink.textContent = 'ceces' + 'e.rummy@gmail.com';
+
     App.showModal('instructionModal');
   },
 
